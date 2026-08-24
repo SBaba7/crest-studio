@@ -16,32 +16,32 @@ export function Contact() {
           {/* Contact Info */}
           <div className="flex flex-col gap-8">
             <div className="flex gap-x-4 bg-white/[0.02] p-6 rounded-2xl border border-white/[0.06]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-500/10">
-                <MessageSquare className="h-5 w-5 text-teal-400" aria-hidden="true" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-950/40 ring-1 ring-purple-500/20">
+                <MessageSquare className="h-5 w-5 text-purple-300" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="text-base font-semibold leading-7 text-foreground">Sales</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   Talk to our security experts about your organization's needs. We typically respond within 2 hours.
                 </p>
-                <p className="mt-4 text-sm font-semibold text-teal-400">sales@crestsecurity.io</p>
+                <p className="mt-4 text-sm font-semibold text-purple-300">sales@crestsecurity.io</p>
               </div>
             </div>
             <div className="flex gap-x-4 bg-white/[0.02] p-6 rounded-2xl border border-white/[0.06]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-500/10">
-                <Mail className="h-5 w-5 text-teal-400" aria-hidden="true" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-950/40 ring-1 ring-purple-500/20">
+                <Mail className="h-5 w-5 text-purple-300" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="text-base font-semibold leading-7 text-foreground">Support</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   Current customers get 24/7 priority support.
                 </p>
-                <p className="mt-4 text-sm font-semibold text-teal-400">support@crestsecurity.io</p>
+                <p className="mt-4 text-sm font-semibold text-purple-300">support@crestsecurity.io</p>
               </div>
             </div>
             <div className="flex gap-x-4 bg-white/[0.02] p-6 rounded-2xl border border-white/[0.06]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-500/10">
-                <MapPin className="h-5 w-5 text-teal-400" aria-hidden="true" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-950/40 ring-1 ring-purple-500/20">
+                <MapPin className="h-5 w-5 text-purple-300" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="text-base font-semibold leading-7 text-foreground">Headquarters</h3>
@@ -104,7 +104,7 @@ export function Contact() {
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full bg-teal-500 text-gray-950 hover:bg-teal-400 font-semibold h-11">
+            <Button type="submit" className="w-full bg-[#581c87] text-white hover:bg-[#6b21a8] border border-purple-300/30 shadow-sm font-semibold h-11 transition-all">
               Send message
             </Button>
           </form>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { debugLog } from "@/lib/debugLog";
@@ -86,8 +87,8 @@ export function Navbar() {
               })}
             </nav>
             <div className="hidden md:flex items-center gap-2">
-              <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-2">Log in</a>
-              <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="group inline-flex h-9 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]">Book Demo</a>
+              <Link to="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-2">Log in</Link>
+              <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="group inline-flex h-9 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]">Book demo</a>
             </div>
             <button type="button" className="md:hidden flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground" aria-label="Toggle menu" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -106,7 +107,8 @@ export function Navbar() {
                 </a>
               ))}
               <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3">
-                <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="block w-full text-center rounded-full bg-primary py-3.5 text-base font-semibold text-primary-foreground">Book Demo</a>
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="block w-full text-center rounded-full bg-secondary py-3 text-base font-semibold text-foreground">Log in</Link>
+                <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="block w-full text-center rounded-full bg-primary py-3.5 text-base font-semibold text-primary-foreground">Book demo</a>
               </div>
             </div>
           </motion.div>

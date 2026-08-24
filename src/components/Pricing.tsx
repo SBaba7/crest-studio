@@ -71,8 +71,8 @@ export function Pricing() {
               key={tier.id}
               className={`rounded-3xl p-8 xl:p-10 flex flex-col justify-between transition-all ${
                 tier.featured
-                  ? "bg-purple-600 text-white ring-1 ring-purple-400/50 shadow-2xl shadow-purple-950/40 sm:-translate-y-2"
-                  : "bg-card/50 text-foreground ring-1 ring-border/70"
+                  ? "bg-[#2b1444] text-white border border-purple-400/30 sm:-translate-y-2"
+                  : "bg-card/50 text-foreground border border-border/70"
               }`}
             >
               <div>
@@ -86,7 +86,7 @@ export function Pricing() {
                 </h3>
                 <p
                   className={`mt-4 text-sm leading-6 ${
-                    tier.featured ? "text-purple-100" : "text-muted-foreground"
+                    tier.featured ? "text-purple-200" : "text-muted-foreground"
                   }`}
                 >
                   {tier.description}
@@ -102,7 +102,7 @@ export function Pricing() {
                   {tier.priceMonthly !== "Custom" && (
                     <span
                       className={`text-sm font-semibold leading-6 ${
-                        tier.featured ? "text-purple-200" : "text-muted-foreground"
+                        tier.featured ? "text-purple-300" : "text-muted-foreground"
                       }`}
                     >
                       /month
@@ -119,10 +119,10 @@ export function Pricing() {
                     }
                   }}
                   aria-describedby={tier.id}
-                  className={`mt-6 block rounded-xl py-2.5 px-3 text-center text-sm font-semibold leading-6 cursor-pointer transition-colors ${
+                  className={`mt-6 block rounded-xl py-2.5 px-3 text-center text-sm font-semibold leading-6 cursor-pointer transition-all ${
                     tier.featured
-                      ? "bg-white text-purple-700 hover:bg-purple-50 shadow-md font-bold"
-                      : "bg-purple-600 text-white hover:bg-purple-500 shadow-sm"
+                      ? "bg-[#581c87] hover:bg-[#6b21a8] text-white border border-purple-300/30 shadow-sm font-semibold"
+                      : "bg-[#3c1466] hover:bg-[#4d1a80] text-white border border-purple-400/20 shadow-sm"
                   }`}
                 >
                   {tier.priceMonthly === "Custom" ? "Contact sales" : "Start free trial"}
@@ -131,14 +131,14 @@ export function Pricing() {
                 <ul
                   role="list"
                   className={`mt-8 space-y-3 text-sm leading-6 ${
-                    tier.featured ? "text-purple-50" : "text-muted-foreground"
+                    tier.featured ? "text-purple-100" : "text-muted-foreground"
                   }`}
                 >
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex gap-x-3 items-center">
                       <Check
                         className={`h-5 w-5 flex-none ${
-                          tier.featured ? "text-white" : "text-purple-400"
+                          tier.featured ? "text-purple-300" : "text-purple-600"
                         }`}
                         aria-hidden="true"
                       />

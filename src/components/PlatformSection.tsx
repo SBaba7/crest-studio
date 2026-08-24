@@ -66,14 +66,13 @@ export function PlatformSection() {
       style={{ height: `${STEP_COUNT * VH_PER_STEP}vh` }}
       className="relative z-20"
     >
-      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#101a24]">
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#1f0b38]">
         <PlasmaShader className="absolute inset-0 w-full h-full block" />
 
         <div
           className="absolute inset-0 pointer-events-none z-[1]"
           style={{
-            background:
-              "radial-gradient(ellipse 72% 62% at 50% 45%, rgba(33, 105, 118, 0.18) 0%, transparent 46%), radial-gradient(ellipse 70% 60% at 50% 50%, transparent 20%, rgba(5, 16, 24, 0.62) 100%)",
+            background: "rgba(10, 3, 20, 0.4)",
           }}
         />
 

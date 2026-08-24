@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Hero } from "@/components/Hero";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { LogoMarquee } from "@/components/LogoMarquee";
 import { Stats } from "@/components/Stats";
 import { Testimonials } from "@/components/Testimonials";
@@ -44,6 +46,7 @@ const SLIDES = [
 export function Home() {
   return (
     <div className="flex flex-col">
+      <LoadingScreen />
       <Hero />
 
       <div className="relative z-10 bg-background">

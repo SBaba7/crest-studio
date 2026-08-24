@@ -147,29 +147,20 @@ export function Hero() {
         >
           <div
             ref={innerRef}
-            className="relative w-full h-full overflow-hidden bg-[#240b42]"
+            className="relative w-full h-full overflow-hidden bg-[#2e1050]"
             style={{
               borderRadius: `${FRAME_RADIUS}px`,
               clipPath: `inset(0 round ${FRAME_RADIUS}px)`,
             }}
           >
-            {/* Luminous Purple Plasma Shader */}
+            {/* Purple Plasma Shader */}
             <PlasmaShader className="absolute inset-0 w-full h-full block" />
 
-            {/* Glowing border ring */}
+            {/* Clean subtle border without glow */}
             <div
               ref={ringRef}
-              className="absolute inset-0 z-[2] pointer-events-none ring-[1.5px] ring-inset ring-white/40 transition-opacity duration-200"
+              className="absolute inset-0 z-[2] pointer-events-none border border-white/15 transition-opacity duration-200"
               style={{ borderRadius: `${FRAME_RADIUS}px` }}
-            />
-
-            {/* Ambient Purple Vignette */}
-            <div
-              className="absolute inset-0 pointer-events-none z-[1]"
-              style={{
-                background:
-                  "radial-gradient(ellipse 75% 65% at 50% 50%, transparent 25%, rgba(32, 10, 60, 0.48) 100%)",
-              }}
             />
 
             {/* Hero Main Headline */}
@@ -178,10 +169,10 @@ export function Hero() {
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
               className="absolute top-0 left-0 z-30 p-8 sm:p-10 lg:p-14 max-w-xl pointer-events-none"
             >
-              <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-white/80 mb-4 drop-shadow-sm">
+              <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-white/80 mb-4">
                 Enterprise Cybersecurity
               </p>
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-display text-white leading-[1.08] text-balance drop-shadow-md">
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-display text-white leading-[1.08] text-balance">
                 Detect AI threats <span className="italic text-white/85 font-normal">before</span> they reach your perimeter.
               </h1>
             </motion.div>
@@ -193,7 +184,7 @@ export function Hero() {
               className="absolute bottom-0 left-0 right-0 z-30 p-8 sm:p-10 lg:p-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
               style={{ pointerEvents: showContent ? "auto" : "none" }}
             >
-              <p className="text-sm sm:text-base text-white/80 max-w-sm leading-relaxed font-light drop-shadow-sm">
+              <p className="text-sm sm:text-base text-white/80 max-w-sm leading-relaxed font-light">
                 Crest neutralizes deepfakes, AI-generated phishing, and zero-day payloads across email, endpoints, and cloud — from one platform.
               </p>
               <div className="flex items-center gap-4 shrink-0">
@@ -203,7 +194,7 @@ export function Hero() {
                     e.preventDefault();
                     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full ring-1 ring-white/30 backdrop-blur-md transition-all shadow-sm"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full border border-white/30 backdrop-blur-md transition-all shadow-sm"
                 >
                   <span>Book demo</span>
                   <span>→</span>
@@ -222,12 +213,12 @@ export function Hero() {
               className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none"
             >
               <div className="text-center px-8">
-                <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-white/70 mb-4 drop-shadow-sm">
+                <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-white/70 mb-4">
                   Scroll to explore
                 </p>
                 <h2
                   id="platform"
-                  className="text-5xl sm:text-6xl lg:text-7xl font-display text-white leading-[1.08] drop-shadow-lg"
+                  className="text-5xl sm:text-6xl lg:text-7xl font-display text-white leading-[1.08]"
                 >
                   The Platform
                 </h2>
@@ -300,11 +291,11 @@ function PlatformFeatureCard({
       className="absolute inset-0 z-20 flex items-center justify-center p-5 sm:p-8 lg:p-12 pt-24 sm:pt-28 pointer-events-none"
     >
       {/* Authentic Frosted Glass Card matching reference image */}
-      <div className="max-w-3xl w-full rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.08] sm:bg-white/[0.09] backdrop-blur-2xl sm:backdrop-blur-3xl border border-white/25 p-7 sm:p-10 lg:p-12 shadow-2xl shadow-purple-950/50 flex flex-col justify-between min-h-[340px] sm:min-h-[380px]">
+      <div className="max-w-3xl w-full rounded-[2rem] sm:rounded-[2.5rem] bg-white/[0.08] sm:bg-white/[0.09] backdrop-blur-2xl sm:backdrop-blur-3xl border border-white/25 p-7 sm:p-10 lg:p-12 shadow-md flex flex-col justify-between min-h-[340px] sm:min-h-[380px]">
         {/* Top Header Row */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-display font-semibold text-white tracking-tight leading-[1.1] drop-shadow-sm mb-2.5">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-display font-semibold text-white tracking-tight leading-[1.1] mb-2.5">
               {feature.name}
             </h3>
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full border border-white/30 bg-white/5 text-[11px] sm:text-xs font-medium text-white/90 backdrop-blur-sm">
@@ -324,7 +315,7 @@ function PlatformFeatureCard({
         </div>
 
         {/* Center Content Body */}
-        <p className="text-sm sm:text-base lg:text-lg text-white/90 leading-relaxed font-light drop-shadow-sm my-5 sm:my-6 max-w-2xl">
+        <p className="text-sm sm:text-base lg:text-lg text-white/90 leading-relaxed font-light my-5 sm:my-6 max-w-2xl">
           {feature.description}
         </p>
 
