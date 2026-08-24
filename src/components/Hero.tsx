@@ -76,18 +76,13 @@ export function Hero() {
   );
   const platformTitleY = useTransform(
     scrollYProgress,
-    [PLATFORM_CENTER_START, PLATFORM_CENTER_END],
-    ["115vh", "0vh"]
+    [PLATFORM_CENTER_START, PLATFORM_CENTER_END, PLATFORM_MOVE_END],
+    ["115vh", "0vh", "-38vh"]
   );
   const platformTitleX = useTransform(
     scrollYProgress,
     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
     ["0vw", "-38vw"]
-  );
-  const platformTitleTop = useTransform(
-    scrollYProgress,
-    [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
-    ["0vh", "-38vh"]
   );
   const platformTitleScale = useTransform(
     scrollYProgress,
@@ -223,8 +218,7 @@ export function Hero() {
               style={{
                 opacity: platformTitleOpacity,
                 x: platformTitleX,
-                y: platformTitleTop,
-                translateY: platformTitleY,
+                y: platformTitleY,
                 scale: platformTitleScale,
               }}
               className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none"
