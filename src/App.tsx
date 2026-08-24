@@ -24,6 +24,24 @@ function AppContent() {
   const isHomePage = location.pathname === "/";
   const isBookDemoPage = location.pathname === "/book-demo" || location.pathname === "/demo";
 
+  useEffect(() => {
+    const previousBodyBackground = document.body.style.backgroundColor;
+    const previousRootBackground = document.documentElement.style.backgroundColor;
+
+    if (isBookDemoPage) {
+      document.body.style.backgroundColor = "#12091f";
+      document.documentElement.style.backgroundColor = "#12091f";
+    } else {
+      document.body.style.backgroundColor = "";
+      document.documentElement.style.backgroundColor = "";
+    }
+
+    return () => {
+      document.body.style.backgroundColor = previousBodyBackground;
+      document.documentElement.style.backgroundColor = previousRootBackground;
+    };
+  }, [isBookDemoPage]);
+
   return (
     <div
       className={`flex min-h-screen flex-col text-foreground selection:bg-primary/20 ${
