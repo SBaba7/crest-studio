@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useSpring, useTransform, useMotionValueEvent } from "framer-motion";
 import { PlasmaShader } from "./PlasmaShader";
+import { ScrollFloat } from "./ScrollFloat";
+import { ScrollReveal } from "./ScrollReveal";
+
 import { ArrowDown, Shield, Lock, Eye, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -67,6 +70,7 @@ export function Hero() {
   const ringRef = useRef<HTMLDivElement>(null);
   const [showContent, setShowContent] = useState(true);
   const [showScrollHint, setShowScrollHint] = useState(true);
+  const [platformRevealActive, setPlatformRevealActive] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -137,6 +141,7 @@ export function Hero() {
 
     setShowContent(progress < HERO_HIDE_END);
     setShowScrollHint(progress < 0.04);
+    setPlatformRevealActive(progress >= PLATFORM_ENTER_START);
 
     window.dispatchEvent(
       new CustomEvent("crest:hero-progress", {
@@ -167,9 +172,11 @@ export function Hero() {
             }}
           >
             {/* Purple Plasma Shader */}
-            <PlasmaShader className="absolute inset-0 w-full h-full block" />
+                        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.35] contrast-[1.12] brightness-[1.05]" />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.12)_0%,rgba(8,5,14,0.04)_45%,rgba(8,5,14,0.2)_100%)]" />
 
             {/* Clean subtle border without glow */}
+
             <div
               ref={ringRef}
               className="absolute inset-0 z-[2] pointer-events-none border border-white/15 transition-opacity duration-200"
@@ -225,12 +232,32 @@ export function Hero() {
                 <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-white/70 mb-4">
                   Scroll to explore
                 </p>
-                <h2
-                  id="platform"
-                  className="text-5xl sm:text-6xl lg:text-7xl font-display text-white leading-[1.08]"
-                >
-                  The Platform
-                </h2>
+                                <div id="platform">
+                  <ScrollFloat
+                    containerClassName="font-display text-5xl leading-[1.08] text-white sm:text-6xl lg:text-7xl"
+                    animationDuration={0.9}
+                    ease="back.inOut(2)"
+                    scrollStart="center bottom+=50%"
+                    scrollEnd="bottom bottom-=40%"
+                    stagger={0.03}
+                    active={platformRevealActive}
+                  >
+                    The Platform
+                  </ScrollFloat>
+                  <ScrollReveal
+                    containerClassName="mx-auto mt-4 max-w-md"
+                    textClassName="text-sm leading-relaxed text-white/75 sm:text-base"
+                    baseOpacity={0.08}
+                    baseRotation={3}
+                    blurStrength={8}
+                    rotationEnd="bottom bottom-=18%"
+                    wordAnimationEnd="bottom bottom-=18%"
+                    active={platformRevealActive}
+                  >
+                    One adaptive command layer for communication, identity, endpoints, and cloud intelligence.
+                  </ScrollReveal>
+                </div>
+
                 <motion.div
                   style={{ opacity: anchoredLineOpacity }}
                   className="mx-auto mt-6 w-[min(16rem,70vw)] px-2"

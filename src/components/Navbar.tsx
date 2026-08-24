@@ -104,12 +104,12 @@ export function Navbar() {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className={`pointer-events-auto flex items-center justify-between w-full max-w-4xl rounded-full backdrop-blur-2xl ring-1 py-2.5 px-5 ${shellClass}`}
           >
-            <Link to="/" className="group flex h-4 w-20 shrink-0 items-center sm:h-7 sm:w-28" aria-label="Crest Home">
-              <img
-                src={isBookDemoPage ? "/crest-logo-white.svg" : "/crest-logo-black.svg"}
-                alt="Crest"
-                className="h-full w-full object-contain object-left transition-opacity duration-300 group-hover:opacity-70"
-              />
+            <Link
+              to="/"
+              className={`group shrink-0 text-sm font-semibold tracking-[-0.04em] transition-opacity duration-300 hover:opacity-65 ${isBookDemoPage ? "text-white" : "text-[#09060e]"}`}
+              aria-label="Crest Home"
+            >
+              Crest.
             </Link>
             <nav className={`hidden md:flex items-center gap-1 rounded-full p-1 ring-1 ${navShellClass}`} aria-label="Primary">
               {navLinks.map((link) => {

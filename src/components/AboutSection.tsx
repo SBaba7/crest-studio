@@ -57,7 +57,7 @@ export function AboutSection() {
 
   return (
     <section id="about" className="relative isolate overflow-clip bg-[#08050e] py-24 text-white sm:py-32 lg:py-40">
-      <CrestChromaWaves className="pointer-events-none absolute inset-0 opacity-75 [mask-image:linear-gradient(to_bottom,transparent_0%,black_12%,black_86%,transparent_100%)]" />
+      <CrestChromaWaves className="pointer-events-none absolute inset-0 opacity-70 saturate-[1.35] contrast-[1.12] brightness-[1.05] [mask-image:linear-gradient(to_bottom,transparent_0%,black_12%,black_86%,transparent_100%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,transparent_0%,rgba(8,5,14,0.22)_45%,rgba(8,5,14,0.8)_100%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
@@ -109,25 +109,26 @@ export function AboutSection() {
           </motion.div>
         </div>
 
-        <div className="mt-20 grid items-start gap-4 md:grid-cols-[1fr_1.1fr_1fr] lg:mt-32">
-          <div className="hidden gap-4 md:grid md:content-start">
+        <div className="mt-20 lg:mt-32 lg:grid lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.16fr)_minmax(0,0.72fr)] lg:items-start lg:gap-6 xl:gap-8">
+          <div className="hidden lg:flex lg:flex-col lg:gap-6 lg:pt-24">
             {galleryColumns.left.map((src, index) => (
               <GalleryImage key={src} src={src} alt={`Crest intelligence interface ${index + 1}`} priority={index === 0} />
             ))}
           </div>
 
-          <div className="lg:sticky lg:top-6 lg:h-[calc(100dvh-3rem)] lg:self-start">
-            <div className="group relative h-[62vh] min-h-[32rem] overflow-hidden rounded-[2rem] border border-white/15 bg-[#110a1d] lg:h-full">
+          <div className="lg:sticky lg:top-28 lg:h-[calc(100dvh-9rem)] lg:self-start">
+            <div className="group relative h-[68vh] min-h-[34rem] overflow-hidden rounded-[2rem] border border-white/15 bg-[#110a1d] sm:h-[44rem] lg:h-full">
               <img
                 src={galleryColumns.center}
                 alt="Abstract security data visualisation"
-                className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025]"
+                className="h-full w-full object-cover brightness-[1.02] saturate-[1.1] contrast-[1.08] transition duration-700 ease-out group-hover:scale-[1.025] group-hover:brightness-110 group-hover:saturate-[1.2]"
                 loading="lazy"
                 decoding="async"
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_34%,rgba(8,5,14,0.7)_100%)]" />
+              <div className="pointer-events-none absolute inset-0 bg-[#512071]/20 mix-blend-color" />
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_36%,rgba(8,5,14,0.72)_100%)]" />
               <div className="absolute inset-x-0 bottom-0 p-7 sm:p-9">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/50">Our mission</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/55">Our mission</p>
                 <p className="mt-3 max-w-sm font-display text-2xl leading-[1.05] text-white sm:text-3xl">
                   Protect the integrity of human communication in an increasingly synthetic world.
                 </p>
@@ -135,7 +136,7 @@ export function AboutSection() {
             </div>
           </div>
 
-          <div className="hidden gap-4 md:grid md:content-start">
+          <div className="hidden lg:flex lg:flex-col lg:gap-6 lg:pt-8">
             {galleryColumns.right.map((src, index) => (
               <GalleryImage key={src} src={src} alt={`Crest security environment ${index + 1}`} priority={index === 0} />
             ))}
@@ -168,14 +169,15 @@ export function AboutSection() {
 
 function GalleryImage({ src, alt, priority }: { src: string; alt: string; priority: boolean }) {
   return (
-    <div className="group relative min-h-[18rem] overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#110a1d] first:mt-10 last:mb-12 md:min-h-[28rem]">
+    <div className="group relative aspect-[4/5] min-h-[18rem] overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#110a1d]">
       <img
         src={src}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
-        className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025]"
+        className="h-full w-full object-cover brightness-[1.02] saturate-[1.1] contrast-[1.08] transition duration-700 ease-out group-hover:scale-[1.025] group-hover:brightness-110 group-hover:saturate-[1.2]"
       />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(87,37,125,0.28),transparent_55%,rgba(8,5,14,0.38))] mix-blend-color" />
     </div>
   );
 }

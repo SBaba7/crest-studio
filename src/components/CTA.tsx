@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { ScrollFloat } from "./ScrollFloat";
+import { ScrollReveal } from "./ScrollReveal";
 
 export function CTA() {
   return (
@@ -13,14 +15,27 @@ export function CTA() {
       >
         <div className="px-6 py-20 sm:px-16 sm:py-24 relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
           <div className="max-w-xl">
-            <h2 className="text-4xl sm:text-5xl font-display leading-[1.1] text-white">
-              Start blocking AI threats{" "}
-              <span className="italic text-[#d8b4fe]">this week.</span>
-            </h2>
-            <p className="mt-6 text-lg text-white/70 font-light leading-relaxed">
-              14-day trial. Connect your email gateway in under 30 minutes.
-              No credit card required.
-            </p>
+            <ScrollFloat
+              containerClassName="font-display text-4xl leading-[1.1] text-white sm:text-5xl"
+              animationDuration={0.9}
+              ease="back.inOut(2)"
+              scrollStart="top bottom-=12%"
+              scrollEnd="bottom center+=10%"
+              stagger={0.022}
+            >
+              Start blocking AI threats this week.
+            </ScrollFloat>
+            <ScrollReveal
+              containerClassName="mt-6"
+              textClassName="text-lg font-light leading-relaxed text-white/70"
+              baseOpacity={0.1}
+              baseRotation={2}
+              blurStrength={7}
+              rotationEnd="bottom center+=10%"
+              wordAnimationEnd="bottom center+=10%"
+            >
+              14-day trial. Connect your email gateway in under 30 minutes. No credit card required.
+            </ScrollReveal>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
             <Link

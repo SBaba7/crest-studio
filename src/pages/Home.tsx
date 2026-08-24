@@ -9,7 +9,8 @@ import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { AboutSection } from "@/components/AboutSection";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
-import { motion } from "framer-motion";
+import { ScrollFloat } from "@/components/ScrollFloat";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 const SLIDES = [
   {
@@ -57,26 +58,28 @@ export function Home() {
         <section id="features" className="bg-secondary/30 py-24 sm:py-32">
           <div className="mx-auto mb-16 max-w-7xl px-6 text-center lg:px-8">
             <div className="mx-auto max-w-2xl">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+              <p className="text-sm font-semibold uppercase tracking-widest text-primary">01 / Platform</p>
+              <ScrollFloat
+                containerClassName="mt-4 font-display text-4xl leading-tight text-foreground sm:text-5xl"
+                animationDuration={0.85}
+                ease="back.inOut(2)"
+                scrollStart="top bottom-=12%"
+                scrollEnd="bottom center+=8%"
+                stagger={0.022}
               >
-                <p className="text-sm font-semibold uppercase tracking-widest text-primary">01 / Platform</p>
-                <h2 className="mt-4 font-display text-4xl leading-tight text-foreground sm:text-5xl">
-                  One console for every surface attackers target.
-                </h2>
-              </motion.div>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="mt-6 text-lg leading-relaxed text-muted-foreground"
+                One console for every surface attackers target.
+              </ScrollFloat>
+              <ScrollReveal
+                containerClassName="mt-6"
+                textClassName="text-lg leading-relaxed text-muted-foreground"
+                baseOpacity={0.12}
+                baseRotation={2}
+                blurStrength={6}
+                rotationEnd="bottom center+=8%"
+                wordAnimationEnd="bottom center+=8%"
               >
                 Explore how Crest unifies detection across communication, identity, endpoints, and cloud infrastructure.
-              </motion.p>
+              </ScrollReveal>
             </div>
           </div>
           <CoverflowCarousel slides={SLIDES} showCaption showNavigation showPagination autoPlay autoPlayInterval={4500} />

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { ScrollFloat } from "./ScrollFloat";
+import { ScrollReveal } from "./ScrollReveal";
 
 interface FAQItem {
   question: string;
@@ -54,12 +56,27 @@ export function FAQ() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-400 mb-3">
             Questions & Answers
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground">
+          <ScrollFloat
+            containerClassName="font-display text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl"
+            animationDuration={0.85}
+            ease="back.inOut(2)"
+            scrollStart="top bottom-=12%"
+            scrollEnd="bottom center+=8%"
+            stagger={0.022}
+          >
             Frequently Asked Questions
-          </h2>
-          <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto font-light">
+          </ScrollFloat>
+          <ScrollReveal
+            containerClassName="mx-auto mt-4 max-w-2xl"
+            textClassName="text-base font-light text-muted-foreground sm:text-lg"
+            baseOpacity={0.12}
+            baseRotation={2}
+            blurStrength={6}
+            rotationEnd="bottom center+=8%"
+            wordAnimationEnd="bottom center+=8%"
+          >
             Clear answers regarding Crest&apos;s threat detection technology, integrations, and deployment options.
-          </p>
+          </ScrollReveal>
         </div>
 
         <div className="divide-y divide-border/60 border-y border-border/60">

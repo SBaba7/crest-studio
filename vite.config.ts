@@ -16,7 +16,7 @@ function debugLogPlugin(): Plugin {
         });
         req.on("end", () => {
           const logPath = path.resolve(import.meta.dirname, "debug-ed1dc1.log");
-          fs.appendFileSync(logPath, body.trim() + "\n");
+          fs.appendFileSync(logPath, `${body.trim()}\n`);
           res.statusCode = 204;
           res.end();
         });
@@ -25,8 +25,12 @@ function debugLogPlugin(): Plugin {
   };
 }
 
-export default defineConfig({
-  plugins: [debugLogPlugin(), react(), tailwindcss()],
+export default defineConfig(({ command }) => ({
+  plugins: [
+    ...(command === "serve" ? [debugLogPlugin()] : []),
+    react(),
+    tailwindcss(),
+  ],
   server: {
     host: "0.0.0.0",
     port: 3000,
@@ -37,4 +41,18 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
-});
+  build: {
+    target: "es2020",
+    cssCodeSplit: true,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules/gsap")) return "gsap";
+          if (id.includes("node_modules/framer-motion") || id.includes("node_modules/motion-dom")) return "motion";
+          if (id.includes("node_modules/@paper-design")) return "shaders";
+        },
+      },
+    },
+  },
+}));

@@ -1,4 +1,6 @@
 import { Check } from "lucide-react";
+import { ScrollFloat } from "./ScrollFloat";
+import { ScrollReveal } from "./ScrollReveal";
 
 const tiers = [
   {
@@ -56,14 +58,29 @@ export function Pricing() {
     <section id="pricing" className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-base font-semibold leading-7 text-purple-400">Pricing</h2>
-          <p className="mt-2 text-4xl font-display font-bold tracking-tight text-foreground sm:text-5xl">
+          <p className="text-base font-semibold leading-7 text-purple-400">Pricing</p>
+          <ScrollFloat
+            containerClassName="mt-2 font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl"
+            animationDuration={0.85}
+            ease="back.inOut(2)"
+            scrollStart="top bottom-=12%"
+            scrollEnd="bottom center+=8%"
+            stagger={0.024}
+          >
             Simple, transparent pricing
-          </p>
+          </ScrollFloat>
         </div>
-        <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-muted-foreground">
+        <ScrollReveal
+          containerClassName="mx-auto mt-6 max-w-2xl text-center"
+          textClassName="text-lg leading-8 text-muted-foreground"
+          baseOpacity={0.12}
+          baseRotation={2}
+          blurStrength={6}
+          rotationEnd="bottom center+=8%"
+          wordAnimationEnd="bottom center+=8%"
+        >
           Choose the plan that fits your organization's security needs. All plans include a 14-day free trial.
-        </p>
+        </ScrollReveal>
         
         <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0 items-stretch">
           {tiers.map((tier) => (
