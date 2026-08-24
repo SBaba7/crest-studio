@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactLenis } from 'lenis/react';
+import 'lenis/dist/lenis.css';
 import React, { forwardRef } from 'react';
 
 const gallery = [
@@ -21,18 +22,14 @@ const gallery = [
 const Component = forwardRef<HTMLElement>((_, ref) => {
   return (
     <ReactLenis root>
-      <main ref={ref} className="bg-[#0b0710] text-white">
-        <section className="relative grid min-h-[78vh] w-full place-content-center overflow-hidden bg-[#0f0a18] sticky top-0">
+      <div ref={ref} className="bg-[#0b0710] text-white">
+        <section className="sticky top-0 grid min-h-[78vh] w-full place-content-center overflow-hidden bg-[#0f0a18]">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(180,124,255,0.22),transparent_38%)]" />
           <div className="relative z-10 mx-auto max-w-4xl px-8 text-center">
             <p className="mb-5 text-xs font-medium uppercase tracking-[0.28em] text-[#c79cff]">About Crest</p>
-            <h1 className="font-display text-5xl font-semibold leading-[110%] tracking-tight sm:text-6xl lg:text-7xl">
-              Security for a world that keeps becoming more synthetic.
-            </h1>
-            <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-white/50 sm:text-lg">
-              Crest was built around a simple idea: security should understand context, adapt to change, and stay out of the way of the people it protects.
-            </p>
+            <h1 className="font-display text-5xl font-semibold leading-[110%] tracking-tight sm:text-6xl lg:text-7xl">Security for a world that keeps becoming more synthetic.</h1>
+            <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-white/50 sm:text-lg">Crest was built around a simple idea: security should understand context, adapt to change, and stay out of the way of the people it protects.</p>
             <div className="mt-10 text-xs uppercase tracking-[0.24em] text-white/30">Scroll to explore</div>
           </div>
         </section>
@@ -64,7 +61,7 @@ const Component = forwardRef<HTMLElement>((_, ref) => {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </ReactLenis>
   );
 });
