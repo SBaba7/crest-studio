@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { PlasmaShader } from "./PlasmaShader";
 import { ArrowDown, Shield, Lock, Eye, AlertTriangle } from "lucide-react";
@@ -188,17 +189,13 @@ export function Hero() {
                 Crest neutralizes deepfakes, AI-generated phishing, and zero-day payloads across email, endpoints, and cloud — from one platform.
               </p>
               <div className="flex items-center gap-4 shrink-0">
-                <a
-                  href="#contact"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-                  }}
+                <Link
+                  to="/book-demo"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/15 hover:bg-white/25 px-5 py-2.5 rounded-full border border-white/30 backdrop-blur-md transition-all shadow-sm"
                 >
                   <span>Book demo</span>
                   <span>→</span>
-                </a>
+                </Link>
               </div>
             </motion.div>
 

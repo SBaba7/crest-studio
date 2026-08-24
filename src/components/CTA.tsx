@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export function CTA() {
   return (
@@ -22,16 +23,12 @@ export function CTA() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-              }}
+            <Link
+              to="/book-demo"
               className="w-full sm:w-auto rounded-full bg-[#581c87] hover:bg-[#6b21a8] text-white border border-purple-300/30 px-8 py-4 text-base font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] text-center shadow-sm"
             >
               Book a demo
-            </a>
+            </Link>
             <a
               href="#pricing"
               onClick={(e) => {

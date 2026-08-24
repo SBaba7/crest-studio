@@ -10,11 +10,25 @@ interface LoadingScreenProps {
 }
 
 export function LoadingScreen({ onComplete }: LoadingScreenProps) {
+  // Check if initial animation has already completed in this browser session
+  const [hasPlayedOnce] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return (
+      sessionStorage.getItem("crest_initial_loaded") === "true" ||
+      (window as unknown as { __crest_initial_loaded?: boolean }).__crest_initial_loaded === true
+    );
+  });
+
   // phase: 0 = drawing line, 1 = curtain opening & expanding, 2 = fading out & revealing site
   const [phase, setPhase] = useState<0 | 1 | 2>(0);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(() => hasPlayedOnce);
 
   useEffect(() => {
+    if (hasPlayedOnce) {
+      onComplete?.();
+      return;
+    }
+
     // Stage 1: Line draws slowly and sleekly across the middle (0ms -> 2000ms)
     const timer1 = setTimeout(() => {
       setPhase(1); // Begin curtain opening & vertical portal expansion
@@ -28,31 +42,20 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
     // Stage 3: Remove loader completely once site is fully unveiled
     const timer3 = setTimeout(() => {
       setIsCompleted(true);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("crest_initial_loaded", "true");
+        (window as unknown as { __crest_initial_loaded?: boolean }).__crest_initial_loaded = true;
+      }
       onComplete?.();
       window.dispatchEvent(new CustomEvent("crest:opening-complete"));
     }, 5400);
-
-    // Allow replaying the opening animation if requested
-    const handleReplay = () => {
-      setIsCompleted(false);
-      setPhase(0);
-      setTimeout(() => setPhase(1), 2100);
-      setTimeout(() => setPhase(2), 4600);
-      setTimeout(() => {
-        setIsCompleted(true);
-        onComplete?.();
-      }, 5400);
-    };
-
-    window.addEventListener("crest:replay-opening", handleReplay);
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
       clearTimeout(timer3);
-      window.removeEventListener("crest:replay-opening", handleReplay);
     };
-  }, [onComplete]);
+  }, [hasPlayedOnce, onComplete]);
 
   if (isCompleted) return null;
 

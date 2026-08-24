@@ -3,6 +3,7 @@ import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
+import { BookDemo } from "./pages/BookDemo";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 function AppContent() {
@@ -17,6 +18,8 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Login />} />
+          <Route path="/book-demo" element={<BookDemo />} />
+          <Route path="/demo" element={<BookDemo />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
