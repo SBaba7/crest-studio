@@ -28,7 +28,7 @@ function AppContent() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      {!isAuthPage && <Footer />}
+      <Footer />
     </div>
   );
 }
