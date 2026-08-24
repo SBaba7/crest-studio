@@ -19,19 +19,26 @@ export function Navbar() {
   useEffect(() => {
     const onHeroProgress = (e: Event) => {
       const progress = (e as CustomEvent<{ progress: number }>).detail.progress;
-      setVisible((prev) => prev || progress > NAV_SHOW_PROGRESS);
+      const eligible = progress >= NAV_SHOW_PROGRESS;
+      setVisible((prev) => prev || eligible);
       if (progress > NAV_SHOW_PROGRESS - 0.05 && progress < NAV_SHOW_PROGRESS + 0.05) {
-        debugLog("Navbar.tsx:hero-progress", "navbar tied to hero progress", {
-          progress,
-          visible: progress > NAV_SHOW_PROGRESS,
-          threshold: NAV_SHOW_PROGRESS,
-        }, "H-nav", "post-fix-v3");
+        debugLog(
+          "Navbar.tsx:hero-progress",
+          "navbar tied to completed hero frame expansion",
+          {
+            progress,
+            visible: eligible,
+            threshold: NAV_SHOW_PROGRESS,
+          },
+          "H-nav",
+          "platform-scroll-v4"
+        );
       }
     };
 
     const onScroll = () => {
       const y = window.scrollY;
-      if (y > 250) setVisible(true);
+      if (y > 700) setVisible(true);
       const sections = navLinks.map((link) => link.href.substring(1));
       let current = "";
       for (const section of sections) {
