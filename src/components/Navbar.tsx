@@ -19,26 +19,18 @@ export function Navbar() {
   useEffect(() => {
     const onHeroProgress = (e: Event) => {
       const progress = (e as CustomEvent<{ progress: number }>).detail.progress;
-      const eligible = progress >= NAV_SHOW_PROGRESS;
-      setVisible((prev) => prev || eligible);
+      setVisible((prev) => prev || progress > NAV_SHOW_PROGRESS);
       if (progress > NAV_SHOW_PROGRESS - 0.05 && progress < NAV_SHOW_PROGRESS + 0.05) {
-        debugLog(
-          "Navbar.tsx:hero-progress",
-          "navbar tied to completed hero frame expansion",
-          {
-            progress,
-            visible: eligible,
-            threshold: NAV_SHOW_PROGRESS,
-          },
-          "H-nav",
-          "platform-scroll-v4"
-        );
+        debugLog("Navbar.tsx:hero-progress", "navbar tied to hero progress", {
+          progress,
+          visible: progress > NAV_SHOW_PROGRESS,
+          threshold: NAV_SHOW_PROGRESS,
+        }, "H-nav", "post-fix-v4");
       }
     };
 
     const onScroll = () => {
       const y = window.scrollY;
-      if (y > 700) setVisible(true);
       const sections = navLinks.map((link) => link.href.substring(1));
       let current = "";
       for (const section of sections) {
@@ -87,99 +79,40 @@ export function Navbar() {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className="pointer-events-auto flex items-center justify-between w-full max-w-4xl rounded-full bg-background/85 backdrop-blur-2xl shadow-lg shadow-black/5 ring-1 ring-border py-2.5 px-5"
           >
-            <a
-              href="#home"
-              onClick={(e) => scrollToSection(e, "#")}
-              className="text-xl font-display tracking-tight text-foreground"
-              aria-label="Crest Home"
-            >
+            <a href="#home" onClick={(e) => scrollToSection(e, "#")} className="text-xl font-display tracking-tight text-foreground" aria-label="Crest Home">
               Crest
             </a>
-
-            <nav
-              className="hidden md:flex items-center gap-1 rounded-full bg-secondary/40 p-1 ring-1 ring-border/50"
-              aria-label="Primary"
-            >
+            <nav className="hidden md:flex items-center gap-1 rounded-full bg-secondary/40 p-1 ring-1 ring-border/50" aria-label="Primary">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href.substring(1);
                 return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={(e) => scrollToSection(e, link.href)}
-                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
-                      isActive
-                        ? "bg-background text-foreground shadow-sm ring-1 ring-border"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
+                  <a key={link.href} href={link.href} onClick={(e) => scrollToSection(e, link.href)} className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${isActive ? "bg-background text-foreground shadow-sm ring-1 ring-border" : "text-muted-foreground hover:text-foreground"}`}>
                     {link.label}
                   </a>
                 );
               })}
             </nav>
-
             <div className="hidden md:flex items-center gap-2">
-              <a
-                href="#contact"
-                onClick={(e) => scrollToSection(e, "#contact")}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-2"
-              >
-                Log in
-              </a>
-              <a
-                href="#contact"
-                onClick={(e) => scrollToSection(e, "#contact")}
-                className="group inline-flex h-9 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]"
-              >
-                Book Demo
-              </a>
+              <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-2">Log in</a>
+              <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="group inline-flex h-9 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]">Book Demo</a>
             </div>
-
-            <button
-              type="button"
-              className="md:hidden flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground"
-              aria-label="Toggle menu"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
+            <button type="button" className="md:hidden flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground" aria-label="Toggle menu" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </motion.div>
         )}
       </AnimatePresence>
-
       <AnimatePresence>
         {visible && mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-20 left-6 right-6 rounded-[2rem] bg-background/95 backdrop-blur-2xl ring-1 ring-border p-6 shadow-2xl pointer-events-auto origin-top"
-          >
+          <motion.div initial={{ opacity: 0, y: -10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10, scale: 0.95 }} transition={{ duration: 0.2 }} className="absolute top-20 left-6 right-6 rounded-[2rem] bg-background/95 backdrop-blur-2xl ring-1 ring-border p-6 shadow-2xl pointer-events-auto origin-top">
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => scrollToSection(e, link.href)}
-                  className={`block px-4 py-3 rounded-2xl text-lg font-display transition-colors ${
-                    activeSection === link.href.substring(1)
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
+                <a key={link.href} href={link.href} onClick={(e) => scrollToSection(e, link.href)} className={`block px-4 py-3 rounded-2xl text-lg font-display transition-colors ${activeSection === link.href.substring(1) ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
                   {link.label}
                 </a>
               ))}
               <div className="mt-4 pt-4 border-t border-border flex flex-col gap-3">
-                <a
-                  href="#contact"
-                  onClick={(e) => scrollToSection(e, "#contact")}
-                  className="block w-full text-center rounded-full bg-primary py-3.5 text-base font-semibold text-primary-foreground"
-                >
-                  Book Demo
-                </a>
+                <a href="#contact" onClick={(e) => scrollToSection(e, "#contact")} className="block w-full text-center rounded-full bg-primary py-3.5 text-base font-semibold text-primary-foreground">Book Demo</a>
               </div>
             </div>
           </motion.div>
