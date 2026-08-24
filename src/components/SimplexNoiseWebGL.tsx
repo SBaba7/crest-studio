@@ -101,11 +101,19 @@ float fbm(vec2 p) {
 }
 
 vec3 srgbToLinear(vec3 c) {
-  return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4), step(0.04045, c));
+  return mix(
+    c / 12.92,
+    pow((c + 0.055) / 1.055, vec3(2.4)),
+    step(0.04045, c)
+  );
 }
 
 vec3 linearToSrgb(vec3 c) {
-  return mix(c * 12.92, 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c));
+  return mix(
+    c * 12.92,
+    1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055,
+    step(0.0031308, c)
+  );
 }
 
 vec3 linToOklab(vec3 c) {
@@ -147,7 +155,8 @@ vec3 palette(float x) {
   vec3 col = u_colors[0];
   for (int i = 0; i < 7; i++) {
     if (float(i) < n)
-      col = mixColour(col, u_colors[i + 1], smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0)));
+      col = mixColour(col, u_colors[i + 1],
+        smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0)));
   }
   return col;
 }
@@ -179,18 +188,21 @@ vec3 shade(vec2 uv, vec2 p, float t) {
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
   vec2 screenUv = uv;
-  vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+  vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy)
+    / min(u_resolution.x, u_resolution.y);
   float cursorMask = 0.0;
 
   if (u_cursorPresence > 0.001) {
-    vec2 cursor = (0.5 * u_mouse * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+    vec2 cursor = (0.5 * u_mouse * u_resolution.xy)
+      / min(u_resolution.x, u_resolution.y);
     vec2 cursorDelta = p - cursor;
     if (u_cursorEffect < 0.5) {
       p += cursor * u_cursorPresence * u_cursorStrength * 0.55;
     } else {
       float cursorDistance = length(cursorDelta);
       vec2 cursorDirection = cursorDelta / max(cursorDistance, 0.0001);
-      cursorMask = u_cursorPresence * (1.0 - smoothstep(0.0, u_cursorRadius, cursorDistance));
+      cursorMask = u_cursorPresence
+        * (1.0 - smoothstep(0.0, u_cursorRadius, cursorDistance));
       if (u_cursorEffect < 1.5) {
         p -= cursorDirection * cursorMask * u_cursorStrength * 0.24;
       } else if (u_cursorEffect < 2.5) {
@@ -198,7 +210,8 @@ void main() {
         float cc = cos(cursorAngle), cs = sin(cursorAngle);
         p = cursor + mat2(cc, -cs, cs, cc) * cursorDelta;
       } else if (u_cursorEffect < 3.5) {
-        float ripple = sin(cursorDistance / max(u_cursorRadius, 0.001) * 18.0 - u_time * 5.0);
+        float ripple = sin(
+          cursorDistance / max(u_cursorRadius, 0.001) * 18.0 - u_time * 5.0);
         p -= cursorDirection * ripple * cursorMask * u_cursorStrength * 0.07;
       }
     }
@@ -250,7 +263,8 @@ void main() {
   if (u_cursorPresence > 0.001 && u_cursorEffect > 3.5)
     col += (vec3(0.18) + col * 0.12) * cursorMask * u_cursorStrength;
   if (u_grain > 0.0001)
-    col += (grainHash(gl_FragCoord.xy + vec2(u_seed * 17.0, u_seed * 31.0)) - 0.5) * u_grain;
+    col += (grainHash(
+      gl_FragCoord.xy + vec2(u_seed * 17.0, u_seed * 31.0)) - 0.5) * u_grain;
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
 `;
@@ -274,14 +288,13 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const gl = canvas.getContext("webgl", { alpha: false, antialias: false });
     if (!gl) return;
 
     let program: WebGLProgram | null = null;
     let buffer: WebGLBuffer | null = null;
     let animationFrame = 0;
-    let running = true;
+    let running = !document.hidden;
     const startedAt = performance.now();
 
     try {
@@ -294,7 +307,6 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
       gl.linkProgram(program);
       gl.deleteShader(vertexShader);
       gl.deleteShader(fragmentShader);
-
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
         throw new Error(gl.getProgramInfoLog(program) || "Unable to link WebGL program.");
       }
@@ -309,7 +321,6 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
       gl.enableVertexAttribArray(position);
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
-      const resolution = gl.getUniformLocation(program, "u_scene");
       const scene = gl.getUniformLocation(program, "u_scene");
       const shape = gl.getUniformLocation(program, "u_shape");
       const surface = gl.getUniformLocation(program, "u_surface");
@@ -341,9 +352,6 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
       const render = (now: number) => {
         if (!running) return;
         resize();
-        gl.clearColor(0.04, 0.02, 0.08, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
         gl.useProgram(program);
         gl.uniform4f(scene, canvas.width, canvas.height, ((now - startedAt) / 1000) * 0.57, 5.0);
         gl.uniform4f(shape, 1.26, 0.35, 0.28, 0.0);
@@ -354,7 +362,6 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
         gl.uniform4f(cursor, 0.0, 2.0, 0.65, 0.46);
         palette.forEach((color, index) => gl.uniform3f(colors[index], color[0], color[1], color[2]));
         for (let index = palette.length; index < 8; index += 1) gl.uniform3f(colors[index], 0, 0, 0);
-
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         animationFrame = window.requestAnimationFrame(render);
       };
@@ -372,7 +379,7 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
       observer.observe(canvas);
       document.addEventListener("visibilitychange", handleVisibility);
       resize();
-      animationFrame = window.requestAnimationFrame(render);
+      if (running) animationFrame = window.requestAnimationFrame(render);
 
       return () => {
         observer.disconnect();
