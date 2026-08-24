@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Eye, EyeOff, ShieldCheck } from "lucide-react";
-import { SimplexNoise } from "@paper-design/shaders-react";
+import { TwinklingMatrixBackground } from "@/components/TwinklingMatrixBackground";
 
 export function Login() {
   const location = useLocation();
@@ -29,19 +29,8 @@ export function Login() {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-[#100b18] text-white">
-      <div className="pointer-events-none absolute inset-0">
-        <SimplexNoise
-          colors={["#F94446", "#FFD1E0", "#4449CF", "#FFFFFF", "#FFD36B"]}
-          stepsPerColor={2}
-          softness={0.08}
-          speed={0.42}
-          scale={0.62}
-          fit="cover"
-          style={{ width: "100%", height: "100%" }}
-        />
-      </div>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_34%,rgba(17,8,28,0.12),rgba(10,7,16,0.7)_44%,rgba(8,6,12,0.96)_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(9,7,13,0.9),rgba(23,12,35,0.62)_48%,rgba(9,7,13,0.86))]" />
+      <TwinklingMatrixBackground />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(143,72,255,0.22),transparent_38%),linear-gradient(120deg,rgba(13,9,21,0.98),rgba(25,12,39,0.86))]" />
 
       <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-6 sm:px-10">
         <Link to="/" className="group flex items-center gap-2 text-sm text-white/65 transition-colors hover:text-white">

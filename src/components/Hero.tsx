@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useSpring, useTransform, useMotionValueEvent } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { PlasmaShader } from "./PlasmaShader";
 import { ArrowDown, Shield, Lock, Eye, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -73,50 +73,38 @@ export function Hero() {
     offset: ["start start", "end end"],
   });
 
-  // Raw scrollYProgress updates once per native "scroll" event, which can fire
-  // faster (and less evenly) than the display refresh rate on some browsers —
-  // that's what made the frame pull-in and card transitions feel stepped.
-  // Springing it re-times every downstream update to Framer's rAF loop, so
-  // motion stays smooth and interpolated between scroll ticks.
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 260,
-    damping: 38,
-    mass: 0.4,
-    restDelta: 0.0005,
-  });
-
   const platformTitleOpacity = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [PLATFORM_ENTER_START, PLATFORM_ENTER_END, PLATFORM_MOVE_END, PLATFORM_MOVE_END + 0.05],
     [0, 1, 1, 0.95]
   );
   const platformTitleY = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [PLATFORM_ENTER_START, PLATFORM_ENTER_END, PLATFORM_MOVE_START, PLATFORM_MOVE_END],
     ["60vh", "0vh", "0vh", "-38vh"]
   );
   const platformTitleX = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
     ["0vw", "-36vw"]
   );
   const platformTitleScale = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
     [1, 0.72]
   );
   const anchoredLineOpacity = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
     [0, 1]
   );
   const remainingProgress = useTransform(
-    smoothProgress,
+    scrollYProgress,
     [FEATURES_START, FEATURES_END],
     [1, 0]
   );
 
-  useMotionValueEvent(smoothProgress, "change", (progress) => {
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
     const borderDone = progress >= BORDER_EXPAND_END;
     const expansion = Math.min(
       1,
@@ -253,7 +241,7 @@ export function Hero() {
                 feature={feature}
                 index={index}
                 total={platformFeatures.length}
-                scrollYProgress={smoothProgress}
+                scrollYProgress={scrollYProgress}
               />
             ))}
 

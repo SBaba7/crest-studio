@@ -60,7 +60,7 @@ export function Legal() {
   const content = CONTENT[location.pathname as keyof typeof CONTENT] ?? CONTENT["/privacy"];
 
   return (
-    <div className="min-h-full bg-background text-foreground px-6 pt-32 pb-24 lg:px-8">
+    <main className="min-h-screen bg-background text-foreground px-6 pt-32 pb-24 lg:px-8">
       <div className="mx-auto max-w-4xl">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-12">
           <ArrowLeft className="h-4 w-4" />
@@ -86,6 +86,6 @@ export function Legal() {
           ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
