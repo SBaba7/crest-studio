@@ -7,14 +7,31 @@ import { debugLog } from "@/lib/debugLog";
 
 const FRAME_PADDING = 24;
 const FRAME_RADIUS = 32;
-const CINEMATIC_HEIGHT = 360;
-const HERO_HIDE_END = 0.22;
-const PLATFORM_CENTER_START = 0.18;
-const PLATFORM_CENTER_END = 0.34;
-const PLATFORM_MOVE_START = 0.38;
-const PLATFORM_MOVE_END = 0.52;
-const FEATURES_START = 0.52;
-const FEATURES_END = 0.96;
+const CINEMATIC_HEIGHT = 520;
+
+// Phase 1: hero content leaves.
+const HERO_HIDE_START = 0.02;
+const HERO_HIDE_END = 0.18;
+
+// Phase 2: the framed shader expands to full bleed.
+const BORDER_EXPAND_START = HERO_HIDE_END;
+const BORDER_EXPAND_END = 0.34;
+
+// Phase 3: platform title rises into center only after the border is gone.
+const PLATFORM_ENTER_START = BORDER_EXPAND_END;
+const PLATFORM_ENTER_END = 0.48;
+
+// Phase 4: once centered, keep it there for a while despite wheel input.
+const PLATFORM_HOLD_START = PLATFORM_ENTER_END;
+const PLATFORM_HOLD_END = 0.64;
+
+// Phase 5: finally move the title into the top-left anchor.
+const PLATFORM_MOVE_START = 0.66;
+const PLATFORM_MOVE_END = 0.82;
+
+// Phase 6: platform feature sequence.
+const FEATURES_START = PLATFORM_MOVE_END;
+const FEATURES_END = 0.98;
 export const NAV_SHOW_PROGRESS = 0.78;
 
 type PlatformFeature = {
@@ -71,34 +88,56 @@ export function Hero() {
 
   const platformTitleOpacity = useTransform(
     scrollYProgress,
-    [PLATFORM_CENTER_START, PLATFORM_CENTER_START + 0.05, PLATFORM_CENTER_END, PLATFORM_MOVE_START],
-    [0, 0.55, 1, 1]
+    [PLATFORM_ENTER_START, PLATFORM_ENTER_START + 0.04, PLATFORM_ENTER_END],
+    [0, 0.65, 1]
   );
+
+  // Stay visually centered through the entire hold phase.
   const platformTitleY = useTransform(
     scrollYProgress,
-    [PLATFORM_CENTER_START, PLATFORM_CENTER_END, PLATFORM_MOVE_END],
-    ["115vh", "0vh", "-38vh"]
+    [PLATFORM_ENTER_START, PLATFORM_ENTER_END, PLATFORM_HOLD_END, PLATFORM_MOVE_END],
+    ["115vh", "0vh", "0vh", "-38vh"]
   );
+
   const platformTitleX = useTransform(
     scrollYProgress,
     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
     ["0vw", "-38vw"]
   );
+
   const platformTitleScale = useTransform(
     scrollYProgress,
     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
     [1, 0.68]
   );
 
+  const anchoredLineOpacity = useTransform(
+    scrollYProgress,
+    [PLATFORM_MOVE_START, PLATFORM_MOVE_START + 0.06],
+    [0, 1]
+  );
+
+  const featureProgress = useTransform(
+    scrollYProgress,
+    [FEATURES_START, FEATURES_END],
+    [0, 1]
+  );
+
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
-    const padding = progress >= 0.96 ? 0 : FRAME_PADDING;
-    const radius = progress >= 0.96 ? 0 : FRAME_RADIUS;
+    const borderDone = progress >= BORDER_EXPAND_END;
+    const expansion = Math.min(
+      1,
+      Math.max(0, (progress - BORDER_EXPAND_START) / (BORDER_EXPAND_END - BORDER_EXPAND_START))
+    );
+    const padding = Math.round(FRAME_PADDING * (1 - expansion));
+    const radius = Math.round(FRAME_RADIUS * (1 - expansion));
 
     if (outerRef.current) {
       outerRef.current.style.padding = `${padding}px`;
     }
     if (innerRef.current) {
       innerRef.current.style.borderRadius = `${radius}px`;
+      innerRef.current.style.clipPath = `inset(0 round ${radius}px)`;
     }
     if (ringRef.current) {
       ringRef.current.style.opacity = radius >= 8 ? "1" : "0";
@@ -109,11 +148,13 @@ export function Hero() {
     setShowScrollHint(progress < 0.05);
 
     window.dispatchEvent(
-      new CustomEvent("crest:hero-progress", { detail: { progress } })
+      new CustomEvent("crest:hero-progress", {
+        detail: { progress, borderDone },
+      })
     );
 
     const now = Date.now();
-    if (now - lastLogRef.current > 180) {
+    if (now - lastLogRef.current > 220) {
       lastLogRef.current = now;
       debugLog(
         "Hero.tsx:progress",
@@ -121,12 +162,13 @@ export function Hero() {
         {
           progress,
           showHero: progress < HERO_HIDE_END,
-          platformCentered: progress >= PLATFORM_CENTER_END,
+          borderDone,
+          platformCentered: progress >= PLATFORM_ENTER_END && progress < PLATFORM_MOVE_START,
           platformAnchored: progress >= PLATFORM_MOVE_END,
           featuresActive: progress >= FEATURES_START,
         },
         "H-cinematic",
-        "platform-scroll-v1"
+        "platform-scroll-v2"
       );
     }
   });
@@ -137,7 +179,7 @@ export function Hero() {
       "hero cinematic section mounted",
       { sectionHeight: `${CINEMATIC_HEIGHT}vh` },
       "H-cinematic",
-      "platform-scroll-v1"
+      "platform-scroll-v2"
     );
   }, []);
 
@@ -157,7 +199,10 @@ export function Hero() {
           <div
             ref={innerRef}
             className="relative w-full h-full overflow-hidden bg-[#1a0f2e]"
-            style={{ borderRadius: `${FRAME_RADIUS}px` }}
+            style={{
+              borderRadius: `${FRAME_RADIUS}px`,
+              clipPath: `inset(0 round ${FRAME_RADIUS}px)`,
+            }}
           >
             <PlasmaShader className="absolute inset-0 w-full h-full block" />
 
@@ -177,7 +222,7 @@ export function Hero() {
 
             <motion.div
               animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : -18 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="absolute top-0 left-0 z-30 p-8 sm:p-10 lg:p-14 max-w-xl pointer-events-none"
             >
               <p className="text-[11px] sm:text-xs font-medium tracking-[0.25em] uppercase text-white/50 mb-5">
@@ -192,7 +237,7 @@ export function Hero() {
 
             <motion.div
               animate={{ opacity: showContent ? 1 : 0, y: showContent ? 0 : 18 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="absolute bottom-0 left-0 right-0 z-30 p-8 sm:p-10 lg:p-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6"
               style={{ pointerEvents: showContent ? "auto" : "none" }}
             >
@@ -230,6 +275,19 @@ export function Hero() {
                 <h2 id="platform" className="text-5xl sm:text-6xl lg:text-7xl font-display text-white leading-[1.08]">
                   The Platform
                 </h2>
+
+                <motion.div
+                  style={{ opacity: anchoredLineOpacity }}
+                  className="mx-auto mt-7 w-[min(17rem,70vw)] px-3"
+                  aria-hidden="true"
+                >
+                  <div className="h-px bg-white/20 overflow-hidden">
+                    <motion.div
+                      style={{ scaleX: featureProgress }}
+                      className="h-full w-full origin-left bg-white/80"
+                    />
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
 
@@ -244,7 +302,7 @@ export function Hero() {
 
             <motion.div
               animate={{ opacity: showScrollHint ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.35 }}
               className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center gap-2 pointer-events-none"
             >
               <span className="text-[10px] tracking-[0.3em] uppercase text-white/30">Scroll</span>
