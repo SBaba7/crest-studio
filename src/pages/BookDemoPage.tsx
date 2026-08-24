@@ -21,7 +21,7 @@ export function BookDemoPage() {
       </div>
 
       <div className="relative z-10 book-demo-content">
-        <style>{`.book-demo-content > div:first-child { background: transparent !important; }`}</style>
+        <style>{`.book-demo-content > div:first-of-type { background: transparent !important; }`}</style>
         <BookDemo />
       </div>
     </div>
