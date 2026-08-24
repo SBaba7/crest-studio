@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
+import { SmoothScroll } from "./components/SmoothScroll";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { BookDemoPage } from "./pages/BookDemoPage";
@@ -43,11 +44,7 @@ function AppContent() {
   }, [isBookDemoPage]);
 
   return (
-    <div
-      className={`flex min-h-screen flex-col text-foreground selection:bg-primary/20 ${
-        isBookDemoPage ? "bg-[#12091f]" : "bg-background"
-      }`}
-    >
+    <div className={`flex min-h-screen flex-col text-foreground selection:bg-primary/20 ${isBookDemoPage ? "bg-[#12091f]" : "bg-background"}`}>
       <ScrollToTop />
       {!isAuthPage && <Navbar />}
       <main className="flex-grow">
@@ -72,7 +69,9 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <SmoothScroll>
+        <AppContent />
+      </SmoothScroll>
     </Router>
   );
 }

@@ -1,27 +1,31 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { PlasmaShader } from "./PlasmaShader";
 
 const FRAME_PADDING = 20;
 const FRAME_RADIUS = 28;
+type LoadingPhase = 0 | 1 | 2 | 3;
 
 interface LoadingScreenProps {
   onComplete?: () => void;
 }
 
+/**
+ * Draws a single purple line precisely inside the same 20px frame used by the
+ * hero. Once complete, that line expands vertically from its centre into the
+ * same rounded shader rectangle, creating a continuous handoff to the hero.
+ */
 export function LoadingScreen({ onComplete }: LoadingScreenProps) {
-  // Check if initial animation has already completed in this browser session
+  const reduceMotion = useReducedMotion();
   const [hasPlayedOnce] = useState(() => {
     if (typeof window === "undefined") return false;
     return (
       sessionStorage.getItem("crest_initial_loaded") === "true" ||
-      (window as unknown as { __crest_initial_loaded?: boolean }).__crest_initial_loaded === true
+      (window as Window & { __crest_initial_loaded?: boolean }).__crest_initial_loaded === true
     );
   });
-
-  // phase: 0 = drawing line, 1 = curtain opening & expanding, 2 = fading out & revealing site
-  const [phase, setPhase] = useState<0 | 1 | 2>(0);
-  const [isCompleted, setIsCompleted] = useState(() => hasPlayedOnce);
+  const [phase, setPhase] = useState<LoadingPhase>(0);
+  const [isCompleted, setIsCompleted] = useState(hasPlayedOnce);
 
   useEffect(() => {
     if (hasPlayedOnce) {
@@ -29,83 +33,56 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
       return;
     }
 
-    // Stage 1: Line draws slowly and sleekly across the middle (0ms -> 2000ms)
-    const timer1 = setTimeout(() => {
-      setPhase(1); // Begin curtain opening & vertical portal expansion
-    }, 2100);
+    const timings = reduceMotion
+      ? { lineComplete: 40, expand: 90, release: 170, complete: 250 }
+      : { lineComplete: 1_160, expand: 1_520, release: 2_900, complete: 3_520 };
 
-    // Stage 2: Curtain opening takes ~2.4s of slow, sleek, luxurious expansion
-    const timer2 = setTimeout(() => {
-      setPhase(2); // Crossfade hand-off
-    }, 4600);
-
-    // Stage 3: Remove loader completely once site is fully unveiled
-    const timer3 = setTimeout(() => {
+    const lineTimer = window.setTimeout(() => setPhase(1), timings.lineComplete);
+    const expandTimer = window.setTimeout(() => setPhase(2), timings.expand);
+    const releaseTimer = window.setTimeout(() => setPhase(3), timings.release);
+    const completeTimer = window.setTimeout(() => {
       setIsCompleted(true);
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("crest_initial_loaded", "true");
-        (window as unknown as { __crest_initial_loaded?: boolean }).__crest_initial_loaded = true;
-      }
+      sessionStorage.setItem("crest_initial_loaded", "true");
+      (window as Window & { __crest_initial_loaded?: boolean }).__crest_initial_loaded = true;
       onComplete?.();
       window.dispatchEvent(new CustomEvent("crest:opening-complete"));
-    }, 5400);
+    }, timings.complete);
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
+      window.clearTimeout(lineTimer);
+      window.clearTimeout(expandTimer);
+      window.clearTimeout(releaseTimer);
+      window.clearTimeout(completeTimer);
     };
-  }, [hasPlayedOnce, onComplete]);
+  }, [hasPlayedOnce, onComplete, reduceMotion]);
 
   if (isCompleted) return null;
 
+  const ease = [0.77, 0, 0.175, 1] as const;
+  const lineComplete = phase >= 1;
+  const frameOpen = phase >= 2;
+
   return (
     <AnimatePresence>
-      {phase < 2 && (
+      {phase < 3 && (
         <motion.div
-          key="curtain-loading-screen"
+          key="crest-line-reveal"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[9999] overflow-hidden select-none pointer-events-auto bg-white"
+          exit={{ opacity: 0, transition: { duration: reduceMotion ? 0.08 : 0.62, ease: [0.16, 1, 0.3, 1] } }}
+          className="fixed inset-0 z-[9999] overflow-hidden bg-white"
+          aria-hidden="true"
         >
-          {/* Top Curtain Half (White panel that glides gracefully upward in phase 1) */}
-          <motion.div
-            initial={{ y: "0%" }}
-            animate={{
-              y: phase === 1 ? "-100%" : "0%",
-            }}
-            transition={{
-              duration: 2.4,
-              ease: [0.77, 0, 0.175, 1], // Cinematic theatrical curtain ease
-            }}
-            className="absolute top-0 left-0 right-0 h-1/2 bg-white z-20"
+          <motion.img
+            src="/crest-logo-black.svg"
+            alt=""
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: phase === 1 ? 1 : 0, y: phase === 1 ? 0 : 10 }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-none absolute left-1/2 top-1/2 z-20 w-40 -translate-x-1/2 -translate-y-[calc(100%+1.9rem)] sm:w-48"
           />
 
-          {/* Bottom Curtain Half (White panel that glides gracefully downward in phase 1) */}
-          <motion.div
-            initial={{ y: "0%" }}
-            animate={{
-              y: phase === 1 ? "100%" : "0%",
-            }}
-            transition={{
-              duration: 2.4,
-              ease: [0.77, 0, 0.175, 1], // Cinematic theatrical curtain ease
-            }}
-            className="absolute bottom-0 left-0 right-0 h-1/2 bg-white z-20"
-          />
-
-          {/* Background backdrop behind curtains */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: phase === 1 ? 1 : 0 }}
-            transition={{ duration: 1.6, delay: 0.2 }}
-            className="absolute inset-0 bg-[#030712] z-0 pointer-events-none"
-          />
-
-          {/* Precision Congruent Portal (Shader Rectangle) */}
           <div
-            className="absolute z-10 pointer-events-none"
+            className="absolute"
             style={{
               left: `${FRAME_PADDING}px`,
               right: `${FRAME_PADDING}px`,
@@ -113,62 +90,47 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               bottom: `${FRAME_PADDING}px`,
             }}
           >
-            {phase === 0 ? (
-              /* Phase 0: Sleek, clean refined purple laser line drawing from left to right - no glow */
-              <div
-                className="absolute w-full"
-                style={{
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  height: "2.5px",
-                }}
+            <motion.div
+              initial={{ scaleY: 0.0035 }}
+              animate={{ scaleY: frameOpen ? 1 : 0.0035 }}
+              transition={{ duration: reduceMotion ? 0.01 : 1.22, ease }}
+              style={{ transformOrigin: "center", borderRadius: `${FRAME_RADIUS}px` }}
+              className="absolute inset-0 overflow-hidden will-change-transform"
+            >
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: reduceMotion ? 0.01 : 1.08, ease: [0.65, 0, 0.15, 1] }}
+                style={{ transformOrigin: "left center" }}
+                className="absolute inset-0 bg-[#3b1759] will-change-transform"
               >
                 <motion.div
-                  initial={{ width: "0%" }}
-                  animate={{ width: "100%" }}
-                  transition={{
-                    duration: 1.9,
-                    ease: [0.65, 0, 0.15, 1],
-                  }}
-                  className="h-full rounded-full"
-                  style={{
-                    backgroundColor: "#581c87", // Clean, elegant, lighter purple without glowing halos
-                  }}
-                />
-              </div>
-            ) : (
-              /* Phase 1: Expanding vertically like an opening portal aperture */
-              <motion.div
-                initial={{
-                  top: "calc(50% - 1.25px)",
-                  height: "2.5px",
-                  borderRadius: "2px",
-                }}
-                animate={{
-                  top: "0px",
-                  height: "100%",
-                  borderRadius: `${FRAME_RADIUS}px`,
-                }}
-                transition={{
-                  duration: 2.4,
-                  ease: [0.77, 0, 0.175, 1], // Perfectly synchronized with the curtain parting
-                }}
-                className="absolute left-0 right-0 overflow-hidden"
-                style={{
-                  backgroundColor: "#02010A",
-                  clipPath: `inset(0 round ${FRAME_RADIUS}px)`,
-                }}
-              >
-                {/* Live Waves Plasma Shader rendering seamlessly */}
-                <PlasmaShader className="absolute inset-0 w-full h-full block" />
-
-                {/* Subtle, clean boundary line without glow */}
-                <div
-                  className="absolute inset-0 pointer-events-none border border-white/15"
-                  style={{ borderRadius: `${FRAME_RADIUS}px` }}
-                />
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: frameOpen ? 1 : 0 }}
+                  transition={{ duration: reduceMotion ? 0.01 : 0.58, delay: reduceMotion ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0"
+                >
+                  <PlasmaShader className="absolute inset-0 block h-full w-full" />
+                </motion.div>
               </motion.div>
-            )}
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: frameOpen ? 1 : 0 }}
+                transition={{ duration: reduceMotion ? 0.01 : 0.3, delay: reduceMotion ? 0 : 0.28 }}
+                style={{ borderRadius: `${FRAME_RADIUS}px` }}
+                className="pointer-events-none absolute inset-0 border border-white/15"
+              />
+
+              <motion.img
+                src="/crest-logo-white.svg"
+                alt=""
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: frameOpen ? 1 : 0, scale: frameOpen ? 1 : 0.96 }}
+                transition={{ duration: reduceMotion ? 0.01 : 0.46, delay: reduceMotion ? 0 : 0.42, ease: [0.16, 1, 0.3, 1] }}
+                className="pointer-events-none absolute left-1/2 top-1/2 z-10 w-56 -translate-x-1/2 -translate-y-1/2 sm:w-72"
+              />
+            </motion.div>
           </div>
         </motion.div>
       )}

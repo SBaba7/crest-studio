@@ -1,6 +1,0 @@
-{
-  "name": "Crest",
-  "description": "AI Threat Detection for Enterprise Security - neutralizes deepfakes, AI-generated phishing, and zero-day payloads across email, endpoints, and cloud from one unified platform.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

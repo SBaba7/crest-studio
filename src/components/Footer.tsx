@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { PlasmaShader } from "./PlasmaShader";
 
@@ -13,8 +14,8 @@ export function Footer() {
     ["Security", "/security"],
   ];
 
-  const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
+  const scrollTo = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
     if (location.pathname !== "/") {
       navigate(`/#${id.toLowerCase()}`);
       return;
@@ -23,43 +24,87 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative z-10 overflow-hidden min-h-[440px] border-t border-white/10">
-      <PlasmaShader className="absolute inset-0 w-full h-full block" />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(38, 12, 68, 0.78) 0%, rgba(30, 9, 56, 0.94) 100%)" }} />
-      <div className="relative z-10 pt-16 sm:pt-24">
-        <div className="mx-auto max-w-7xl px-6 pb-8 lg:px-8">
-          <div className="xl:grid xl:grid-cols-3 xl:gap-12">
-            <div className="space-y-6 xl:col-span-1">
-              <Link to="/" className="text-2xl font-display tracking-tight text-white hover:text-[#c9a7ff] transition-colors">Crest</Link>
-              <p className="text-sm leading-relaxed text-white/50 max-w-xs font-light">Unified threat detection for the AI era. Deepfake blocking, phishing neutralization, and zero-trust enforcement — deployed in minutes.</p>
-              <a href="mailto:sales@crestsecurity.io" className="text-sm text-white/50 hover:text-[#c9a7ff] transition-colors">sales@crestsecurity.io</a>
+    <footer className="relative z-10 overflow-hidden bg-[#08050e] pt-20 text-white sm:pt-28">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-80 overflow-hidden opacity-45">
+        <PlasmaShader className="absolute inset-0 block h-full w-full" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,#08050e_0%,rgba(8,5,14,0.18)_52%,#08050e_100%)]" />
+      </div>
+
+      <div className="relative mx-auto max-w-[104rem] px-4 sm:px-6 lg:px-8">
+        <div className="flex h-[clamp(7rem,17vw,17rem)] items-center justify-center border-b border-white/10 pb-5 sm:pb-8">
+          <img
+            src="/crest-logo-white.svg"
+            alt="Crest"
+            className="h-[78%] w-auto max-w-[76vw] object-contain"
+          />
+        </div>
+      </div>
+
+      <div className="relative mt-10 rounded-t-[2.5rem] border-t border-white/10 bg-[#05030a] sm:mt-14 sm:rounded-t-[4rem]">
+        <div className="mx-auto max-w-7xl px-6 pb-8 pt-12 sm:pb-10 sm:pt-16 lg:px-8 lg:pt-20">
+          <div className="grid gap-14 xl:grid-cols-12 xl:gap-10">
+            <div className="xl:col-span-4">
+              <Link to="/" className="group flex h-7 w-28 items-center sm:h-8 sm:w-32" aria-label="Crest home">
+                <img
+                  src="/crest-logo-white.svg"
+                  alt="Crest"
+                  className="h-full w-full object-contain object-left transition-opacity duration-300 group-hover:opacity-70"
+                />
+              </Link>
+              <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/50">
+                Unified threat detection for the AI era. Deepfake blocking, phishing neutralization, and zero-trust enforcement—deployed in minutes.
+              </p>
+              <a href="mailto:sales@crestsecurity.io" className="group mt-7 inline-flex items-center gap-2 text-sm font-medium text-white/75 transition-colors hover:text-white">
+                sales@crestsecurity.io
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
             </div>
-            <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-              <div className="md:grid md:grid-cols-2 md:gap-8">
-                <div>
-                  <h3 className="text-sm font-semibold text-white/80 uppercase tracking-widest mb-6">Product</h3>
-                  <ul className="space-y-4">{product.map((name) => <li key={name}><a href={`#${name.toLowerCase()}`} onClick={(e) => scrollTo(e, name)} className="text-sm text-white/45 hover:text-[#c9a7ff] transition-colors">{name}</a></li>)}</ul>
-                </div>
-                <div className="mt-10 md:mt-0">
-                  <h3 className="text-sm font-semibold text-white/80 uppercase tracking-widest mb-6">Company</h3>
-                  <ul className="space-y-4">
-                    {company.map((name) => <li key={name}><a href={`#${name.toLowerCase()}`} onClick={(e) => scrollTo(e, name)} className="text-sm text-white/45 hover:text-[#c9a7ff] transition-colors">{name}</a></li>)}
-                    <li><Link to="/book-demo" className="text-sm text-white/45 hover:text-[#c9a7ff] transition-colors">Book a demo</Link></li>
-                  </ul>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-white/80 uppercase tracking-widest mb-6">Legal</h3>
-                <ul className="space-y-4">{legal.map(([name, href]) => <li key={name}><Link to={href} className="text-sm text-white/45 hover:text-[#c9a7ff] transition-colors">{name}</Link></li>)}</ul>
-              </div>
+
+            <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 xl:col-span-7 xl:col-start-6">
+              <FooterColumn title="Product">
+                {product.map((name) => (
+                  <a key={name} href={`#${name.toLowerCase()}`} onClick={(event) => scrollTo(event, name)} className="footer-link">
+                    {name}
+                  </a>
+                ))}
+              </FooterColumn>
+              <FooterColumn title="Company">
+                {company.map((name) => (
+                  <a key={name} href={`#${name.toLowerCase()}`} onClick={(event) => scrollTo(event, name)} className="footer-link">
+                    {name}
+                  </a>
+                ))}
+                <Link to="/book-demo" className="footer-link">Book a demo</Link>
+              </FooterColumn>
+              <FooterColumn title="Legal" className="col-span-2 sm:col-span-1">
+                {legal.map(([name, href]) => (
+                  <Link key={href} to={href} className="footer-link">{name}</Link>
+                ))}
+              </FooterColumn>
             </div>
           </div>
-          <div className="mt-16 sm:mt-24 border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-white/35">&copy; {new Date().getFullYear()} Crest Security. All rights reserved.</p>
-            <div className="flex gap-6 text-xs font-medium"><a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="text-white/35 hover:text-white/70 transition-colors">LinkedIn</a><a href="https://x.com" target="_blank" rel="noreferrer" className="text-white/35 hover:text-white/70 transition-colors">X</a></div>
+
+          <div className="mt-16 flex flex-col gap-5 border-t border-white/10 pt-6 text-xs text-white/35 sm:mt-20 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {new Date().getFullYear()} Crest Security. All rights reserved.</p>
+            <div className="flex items-center gap-6">
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-white/80">LinkedIn</a>
+              <a href="https://x.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-white/80">X</a>
+              <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="ml-auto transition-colors hover:text-white/80 sm:ml-2">
+                Back to top ↑
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={className}>
+      <h3 className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40">{title}</h3>
+      <div className="mt-5 flex flex-col items-start gap-3.5">{children}</div>
+    </div>
   );
 }

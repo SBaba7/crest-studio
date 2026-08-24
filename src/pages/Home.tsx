@@ -7,6 +7,7 @@ import { Pricing } from "@/components/Pricing";
 import { FAQ } from "@/components/FAQ";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
+import { AboutSection } from "@/components/AboutSection";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { motion } from "framer-motion";
 
@@ -51,7 +52,6 @@ export function Home() {
 
       <div className="relative z-10 bg-background">
         <LogoMarquee />
-
         <Stats />
 
         <section id="features" className="bg-secondary/30 py-24 sm:py-32">
@@ -63,9 +63,7 @@ export function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-                  01 / Platform
-                </p>
+                <p className="text-sm font-semibold uppercase tracking-widest text-primary">01 / Platform</p>
                 <h2 className="mt-4 font-display text-4xl leading-tight text-foreground sm:text-5xl">
                   One console for every surface attackers target.
                 </h2>
@@ -81,18 +79,12 @@ export function Home() {
               </motion.p>
             </div>
           </div>
-          <CoverflowCarousel
-            slides={SLIDES}
-            showCaption
-            showNavigation
-            showPagination
-            autoPlay
-            autoPlayInterval={4500}
-          />
+          <CoverflowCarousel slides={SLIDES} showCaption showNavigation showPagination autoPlay autoPlayInterval={4500} />
         </section>
 
         <Testimonials />
         <Pricing />
+        <AboutSection />
         <FAQ />
         <CTA />
         <Footer />

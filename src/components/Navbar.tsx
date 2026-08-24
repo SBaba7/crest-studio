@@ -88,7 +88,6 @@ export function Navbar() {
   const shellClass = isBookDemoPage
     ? "bg-[#140b20]/55 ring-white/10 shadow-black/20"
     : "bg-background/85 shadow-black/5 ring-border";
-  const logoClass = isBookDemoPage ? "text-white" : "text-foreground";
   const mutedClass = isBookDemoPage ? "text-white/65 hover:text-white" : "text-muted-foreground hover:text-foreground";
   const navShellClass = isBookDemoPage ? "bg-white/[0.05] ring-white/10" : "bg-secondary/40 ring-border/50";
   const inactiveNavClass = isBookDemoPage ? "text-white/50 hover:text-white" : "text-muted-foreground hover:text-foreground";
@@ -105,8 +104,12 @@ export function Navbar() {
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className={`pointer-events-auto flex items-center justify-between w-full max-w-4xl rounded-full backdrop-blur-2xl ring-1 py-2.5 px-5 ${shellClass}`}
           >
-            <Link to="/" className={`text-xl font-display tracking-tight ${logoClass}`} aria-label="Crest Home">
-              Crest
+            <Link to="/" className="group flex h-4 w-20 shrink-0 items-center sm:h-7 sm:w-28" aria-label="Crest Home">
+              <img
+                src={isBookDemoPage ? "/crest-logo-white.svg" : "/crest-logo-black.svg"}
+                alt="Crest"
+                className="h-full w-full object-contain object-left transition-opacity duration-300 group-hover:opacity-70"
+              />
             </Link>
             <nav className={`hidden md:flex items-center gap-1 rounded-full p-1 ring-1 ${navShellClass}`} aria-label="Primary">
               {navLinks.map((link) => {

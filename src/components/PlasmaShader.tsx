@@ -400,25 +400,16 @@ export function PlasmaShader({ className }: PlasmaShaderProps) {
     window.addEventListener("resize", resize);
 
     let rafId = 0;
-    let isVisible = !document.hidden;
-    const startTime = performance.now();
-
-    const onVisibilityChange = () => {
-      isVisible = !document.hidden;
-      if (isVisible) {
-        lastTime = performance.now();
-        rafId = requestAnimationFrame(render);
-      } else {
-        cancelAnimationFrame(rafId);
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
+    let isDocumentVisible = !document.hidden;
+    let isInViewport = true;
     let lastTime = performance.now();
     let accumulatedTime = 0;
 
     const render = (now: number) => {
-      if (!isVisible) return;
+      if (!isDocumentVisible || !isInViewport) {
+        rafId = 0;
+        return;
+      }
 
       const dt = (now - lastTime) * 0.001;
       lastTime = now;
@@ -438,14 +429,40 @@ export function PlasmaShader({ className }: PlasmaShaderProps) {
 
       // Render fullscreen triangle
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-
       rafId = requestAnimationFrame(render);
     };
 
-    rafId = requestAnimationFrame(render);
+    const updateRenderState = () => {
+      const shouldRender = isDocumentVisible && isInViewport;
+      if (shouldRender && !rafId) {
+        lastTime = performance.now();
+        rafId = requestAnimationFrame(render);
+      }
+      if (!shouldRender && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    };
+
+    const onVisibilityChange = () => {
+      isDocumentVisible = !document.hidden;
+      updateRenderState();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isInViewport = entry.isIntersecting;
+        updateRenderState();
+      },
+      { rootMargin: "160px" }
+    );
+    observer.observe(canvas);
+    updateRenderState();
 
     return () => {
       cancelAnimationFrame(rafId);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       if (buffer) gl.deleteBuffer(buffer);
