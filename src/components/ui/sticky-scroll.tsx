@@ -2,7 +2,7 @@
 
 import { ReactLenis } from 'lenis/react';
 import 'lenis/dist/lenis.css';
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 
 const gallery = [
   'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&auto=format&fit=crop',
@@ -19,7 +19,7 @@ const gallery = [
   'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=900&auto=format&fit=crop',
 ];
 
-const Component = forwardRef<HTMLElement>((_, ref) => {
+const Component = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <ReactLenis root>
       <div ref={ref} className="bg-[#0b0710] text-white">
