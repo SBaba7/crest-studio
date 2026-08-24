@@ -1,16 +1,10 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { Shield, Lock, Eye, AlertTriangle } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { PlasmaShader } from "./PlasmaShader";
 import { debugLog } from "@/lib/debugLog";
 
-const features: {
-  name: string;
-  description: string;
-  icon: LucideIcon;
-  stat: string;
-}[] = [
+const features = [
   {
     name: "Deepfake & Voice Clone Detection",
     description:

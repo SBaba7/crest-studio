@@ -18,7 +18,7 @@ export function CTA() {
           }}
         />
 
-        <div className="px-6 py-24 sm:px-16 sm:py-32 relative z-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
+        <div className="px-6 py-20 sm:px-16 sm:py-24 relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10">
           <div className="max-w-xl">
             <h2 className="text-4xl sm:text-5xl font-display leading-[1.1]">
               Start blocking AI threats{" "}
@@ -29,7 +29,7 @@ export function CTA() {
               No credit card required.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row items-start gap-4 shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
             <a
               href="#contact"
               onClick={(e) => {

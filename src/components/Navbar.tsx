@@ -6,7 +6,7 @@ import { NAV_SHOW_PROGRESS } from "./Hero";
 
 const navLinks = [
   { label: "Platform", href: "#platform" },
-  { label: "Product", href: "#product" },
+  { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
   { label: "About", href: "#about" },
 ];
@@ -19,14 +19,7 @@ export function Navbar() {
   useEffect(() => {
     const onHeroProgress = (e: Event) => {
       const progress = (e as CustomEvent<{ progress: number }>).detail.progress;
-      setVisible((prev) => prev || progress > NAV_SHOW_PROGRESS);
-      if (progress > NAV_SHOW_PROGRESS - 0.05 && progress < NAV_SHOW_PROGRESS + 0.05) {
-        debugLog("Navbar.tsx:hero-progress", "navbar tied to hero progress", {
-          progress,
-          visible: progress > NAV_SHOW_PROGRESS,
-          threshold: NAV_SHOW_PROGRESS,
-        }, "H-nav", "post-fix-v4");
-      }
+      setVisible(progress > NAV_SHOW_PROGRESS);
     };
 
     const onScroll = () => {
@@ -102,6 +95,7 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
       <AnimatePresence>
         {visible && mobileOpen && (
           <motion.div initial={{ opacity: 0, y: -10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10, scale: 0.95 }} transition={{ duration: 0.2 }} className="absolute top-20 left-6 right-6 rounded-[2rem] bg-background/95 backdrop-blur-2xl ring-1 ring-border p-6 shadow-2xl pointer-events-auto origin-top">

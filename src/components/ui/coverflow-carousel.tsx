@@ -1,201 +1,103 @@
-"use client";
-import * as React from "react";
+import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-const useIsoLayoutEffect =
-  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
-export interface CoverflowSlide {
+
+export interface SlideData {
+  title: string;
+  category?: string;
   src: string;
-  alt: string;
-  title?: string;
-  subtitle?: string;
-  meta?: { label: string; value: string }[];
+  description?: string;
 }
+
 export interface CoverflowCarouselProps {
-  slides: CoverflowSlide[];
-  rotate?: number;
-  depth?: number;
-  perspective?: number;
-  falloff?: number;
-  fade?: number;
-  cardWidth?: string;
-  gap?: number;
-  loop?: boolean;
-  showCaption?: boolean;
+  slides: SlideData[];
+  initialIndex?: number;
   showPagination?: boolean;
   showNavigation?: boolean;
+  showCaption?: boolean;
   autoPlay?: boolean;
   autoPlayInterval?: number;
-  label?: string;
   className?: string;
-  cardClassName?: string;
+  aspectRatio?: "video" | "square" | "wide";
 }
+
 export function CoverflowCarousel({
   slides,
-  rotate = 44,
-  depth = 0.6,
-  perspective = 3,
-  falloff = 0.56,
-  fade = 0.1,
-  cardWidth = "clamp(148px, 22vw, 260px)",
-  gap = 0.05,
-  loop = true,
-  showCaption = false,
-  showPagination = false,
-  showNavigation = false,
+  initialIndex = 0,
+  showPagination = true,
+  showNavigation = true,
+  showCaption = true,
   autoPlay = false,
   autoPlayInterval = 4000,
-  label = "Cover carousel",
   className,
-  cardClassName,
+  aspectRatio = "video",
 }: CoverflowCarouselProps) {
   const count = slides.length;
-  const frameRef = React.useRef<HTMLDivElement>(null);
-  const cardRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-  const posRef = React.useRef(0);
-  const targetRef = React.useRef(0);
-  const widthRef = React.useRef(0);
-  const rafRef = React.useRef<number | null>(null);
-  const dragRef = React.useRef<{
-    id: number;
-    x: number;
-    pos: number;
-    v: number;
-    t: number;
-  } | null>(null);
-  const [selected, setSelected] = React.useState(0);
-  const indexAt = React.useCallback(
-    (pos: number) => ((Math.round(pos) % count) + count) % count,
-    [count],
+  const [selected, setSelected] = React.useState(
+    Math.min(Math.max(initialIndex, 0), count - 1)
   );
-  const paint = React.useCallback(() => {
-    const width = widthRef.current;
-    if (!width) return;
-    const pitch = width * (1 + gap);
-    const pos = posRef.current;
-    cardRefs.current.forEach((card, index) => {
-      if (!card) return;
-      let offset = index - pos;
-      if (loop) {
-        offset = ((offset % count) + count) % count;
-        if (offset > count / 2) offset -= count;
-      }
-      const distance = Math.abs(offset);
-      const ramp = Math.pow(distance, falloff);
-      const tilt = Math.min(rotate * ramp, 82) * Math.sign(offset);
-      card.style.transform =
-        `translateX(calc(-50% + ${offset * pitch}px)) ` +
-        `translateZ(${-depth * width * ramp}px) rotateY(${-tilt}deg)`;
-      const edge = loop ? Math.min(1, Math.max(0, count / 2 - distance)) : 1;
-      card.style.opacity = String(Math.max(0, 1 - fade * distance) * edge);
-      card.style.zIndex = String(100 - Math.round(distance));
-    });
-  }, [count, depth, fade, falloff, gap, loop, rotate]);
-  const settle = React.useCallback(
-    (target: number) => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      targetRef.current = target;
-      setSelected(indexAt(target));
-      const step = () => {
-        const remaining = target - posRef.current;
-        if (Math.abs(remaining) < 0.0004) {
-          posRef.current = target;
-          paint();
-          rafRef.current = null;
-          return;
-        }
-        posRef.current += remaining * 0.16;
-        paint();
-        rafRef.current = requestAnimationFrame(step);
-      };
-      rafRef.current = requestAnimationFrame(step);
-    },
-    [indexAt, paint],
+
+  const prev = React.useCallback(
+    () => setSelected((curr) => (curr - 1 + count) % count),
+    [count]
   );
-  const clamp = React.useCallback(
-    (pos: number) => (loop ? pos : Math.max(0, Math.min(count - 1, pos))),
-    [count, loop],
+  const next = React.useCallback(
+    () => setSelected((curr) => (curr + 1) % count),
+    [count]
   );
-  const goTo = React.useCallback(
-    (index: number) => {
-      const target = loop
-        ? index + Math.round((targetRef.current - index) / count) * count
-        : index;
-      settle(clamp(target));
-    },
-    [clamp, count, loop, settle],
-  );
-  const nudge = React.useCallback(
-    (by: number) => settle(clamp(Math.round(targetRef.current) + by)),
-    [clamp, settle],
-  );
-  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (rafRef.current !== null) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
+
+  const [dragStart, setDragStart] = React.useState<number | null>(null);
+  const [dragOffset, setDragOffset] = React.useState(0);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setDragStart(e.touches[0].clientX);
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (dragStart !== null) {
+      setDragOffset(e.touches[0].clientX - dragStart);
     }
-    event.currentTarget.setPointerCapture(event.pointerId);
-    targetRef.current = posRef.current;
-    dragRef.current = {
-      id: event.pointerId,
-      x: event.clientX,
-      pos: posRef.current,
-      v: 0,
-      t: performance.now(),
+  };
+  const onTouchEnd = () => {
+    if (dragOffset > 60) prev();
+    else if (dragOffset < -60) next();
+    setDragStart(null);
+    setDragOffset(0);
+  };
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    setDragStart(e.clientX);
+  };
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (dragStart !== null) {
+      setDragOffset(e.clientX - dragStart);
+    }
+  };
+  const onMouseUp = () => {
+    if (dragOffset > 60) prev();
+    else if (dragOffset < -60) next();
+    setDragStart(null);
+    setDragOffset(0);
+  };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
     };
-  };
-  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    if (!drag || drag.id !== event.pointerId) return;
-    const pitch = widthRef.current * (1 + gap);
-    if (!pitch) return;
-    const now = performance.now();
-    const previous = posRef.current;
-    posRef.current = clamp(drag.pos - (event.clientX - drag.x) / pitch);
-    drag.v = ((posRef.current - previous) / Math.max(now - drag.t, 1)) * 1000;
-    drag.t = now;
-    const index = indexAt(posRef.current);
-    if (index !== selected) setSelected(index);
-    paint();
-  };
-  const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-    const drag = dragRef.current;
-    if (!drag || drag.id !== event.pointerId) return;
-    dragRef.current = null;
-    const carried = Math.max(-2, Math.min(2, drag.v * 0.18));
-    settle(clamp(Math.round(posRef.current + carried)));
-  };
-  useIsoLayoutEffect(() => {
-    const frame = frameRef.current;
-    if (!frame) return;
-    const measure = () => {
-      const card = cardRefs.current[0];
-      if (!card) return;
-      widthRef.current = card.offsetWidth;
-      paint();
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(frame);
-    return () => observer.disconnect();
-  }, [paint]);
-  React.useEffect(
-    () => () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    },
-    [],
-  );
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [prev, next]);
 
   const pausedRef = React.useRef(false);
 
   React.useEffect(() => {
     if (!autoPlay || count <= 1) return;
-    const id = window.setInterval(() => {
-      if (pausedRef.current || dragRef.current) return;
-      nudge(1);
+    const id = setInterval(() => {
+      if (!pausedRef.current) next();
     }, autoPlayInterval);
-    return () => window.clearInterval(id);
-  }, [autoPlay, autoPlayInterval, count, nudge]);
+    return () => clearInterval(id);
+  }, [autoPlay, autoPlayInterval, count, next]);
 
   const onPointerEnter = () => {
     pausedRef.current = true;
@@ -205,129 +107,150 @@ export function CoverflowCarousel({
   };
 
   const active = slides[selected];
+
+  const aspectClass = {
+    video: "aspect-[16/10]",
+    square: "aspect-square",
+    wide: "aspect-[21/9]",
+  }[aspectRatio];
+
   return (
     <div
-      className={cn("w-full", className)}
-      style={{ ["--cf-card" as string]: cardWidth }}
-      role="region"
-      aria-roledescription="carousel"
-      aria-label={label}
+      className={cn("w-full max-w-6xl mx-auto px-4 select-none", className)}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeaveFrame}
     >
-      <div className="relative">
-        <div
-          ref={frameRef}
-          tabIndex={0}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
-          onPointerEnter={onPointerEnter}
-          onPointerLeave={onPointerLeaveFrame}
-          onKeyDown={(event) => {
-            if (event.key === "ArrowLeft") {
-              event.preventDefault();
-              nudge(-1);
-            } else if (event.key === "ArrowRight") {
-              event.preventDefault();
-              nudge(1);
-            }
-          }}
-          className="cursor-grab overflow-hidden py-10 outline-none ring-ring focus-visible:ring-2 active:cursor-grabbing"
-          style={{
-            perspective: `calc(var(--cf-card) * ${perspective})`,
-            touchAction: "pan-y",
-          }}
-        >
-          <div
-            className="relative select-none"
-            style={{
-              height: "var(--cf-card)",
-              transformStyle: "preserve-3d",
-            }}
-          >
-            {slides.map((slide, index) => (
-              <div
-                key={index}
-                ref={(node) => {
-                  cardRefs.current[index] = node;
-                }}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`${index + 1} of ${count}`}
+      <div
+        className="relative h-[340px] sm:h-[400px] md:h-[460px] flex items-center justify-center overflow-hidden [perspective:1200px]"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+      >
+        <div className="relative w-full max-w-[560px] h-[300px] sm:h-[340px] md:h-[380px] flex items-center justify-center [transform-style:preserve-3d]">
+          {slides.map((slide, i) => {
+            let offset = i - selected;
+            if (offset > count / 2) offset -= count;
+            if (offset < -count / 2) offset += count;
+
+            const isCenter = offset === 0;
+            const isPrev = offset === -1;
+            const isNext = offset === 1;
+            const isVisible = Math.abs(offset) <= 2;
+
+            if (!isVisible) return null;
+
+            const rotateY = offset * -32;
+            const translateX = offset * 220;
+            const translateZ = -Math.abs(offset) * 160;
+            const scale = isCenter ? 1 : 0.85;
+            const opacity = isCenter ? 1 : Math.abs(offset) === 1 ? 0.65 : 0.3;
+            const zIndex = 20 - Math.abs(offset);
+
+            return (
+              <motion.div
+                key={slide.src + i}
+                onClick={() => setSelected(i)}
                 className={cn(
-                  "absolute left-1/2 top-0 aspect-square overflow-hidden rounded-2xl bg-muted shadow-xl will-change-transform",
-                  cardClassName,
+                  "absolute inset-0 cursor-pointer rounded-2xl overflow-hidden shadow-2xl bg-card border border-border/60 transition-colors",
+                  isCenter ? "ring-2 ring-primary/40" : "hover:border-primary/40"
                 )}
-                style={{ width: "var(--cf-card)" }}
+                style={{ zIndex }}
+                animate={{
+                  transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                  opacity,
+                }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.32, 0.72, 0, 1],
+                }}
               >
                 <img
                   src={slide.src}
-                  alt={slide.alt}
+                  alt={slide.title}
+                  className="w-full h-full object-cover pointer-events-none"
                   draggable={false}
-                  className="h-full w-full select-none object-cover"
                 />
-              </div>
-            ))}
-          </div>
+                <div
+                  className={cn(
+                    "absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity",
+                    isCenter ? "opacity-90" : "opacity-60"
+                  )}
+                />
+                <div className="absolute top-4 left-4">
+                  {slide.category && (
+                    <span className="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full bg-black/50 text-white/90 backdrop-blur-md border border-white/10">
+                      {slide.category}
+                    </span>
+                  )}
+                </div>
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <h4 className="text-lg sm:text-xl font-display font-medium leading-tight">
+                    {slide.title}
+                  </h4>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
-        {showNavigation && (
+
+        {showNavigation && count > 1 && (
           <>
             <button
-              type="button"
+              onClick={prev}
               aria-label="Previous slide"
-              onClick={() => nudge(-1)}
-              className="absolute left-3 top-1/2 z-[200] -translate-y-1/2 rounded-full bg-background/70 p-2 text-foreground backdrop-blur transition hover:bg-background"
+              className="absolute left-2 sm:left-4 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-background/80 backdrop-blur-md border border-border text-foreground shadow-lg hover:bg-background transition-all hover:scale-105 active:scale-95"
             >
-              <ChevronLeft className="size-5" />
+              <ChevronLeft className="h-5 w-5" />
             </button>
             <button
-              type="button"
+              onClick={next}
               aria-label="Next slide"
-              onClick={() => nudge(1)}
-              className="absolute right-3 top-1/2 z-[200] -translate-y-1/2 rounded-full bg-background/70 p-2 text-foreground backdrop-blur transition hover:bg-background"
+              className="absolute right-2 sm:right-4 z-30 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-background/80 backdrop-blur-md border border-border text-foreground shadow-lg hover:bg-background transition-all hover:scale-105 active:scale-95"
             >
-              <ChevronRight className="size-5" />
+              <ChevronRight className="h-5 w-5" />
             </button>
           </>
         )}
       </div>
-      {showCaption && active?.title && (
-        <div
-          key={selected}
-          className="mt-2 flex flex-col items-center px-6 duration-300 animate-in fade-in"
-        >
-          <p className="text-[15px] font-semibold tracking-tight text-foreground">
-            {active.title}
-          </p>
-          {active.subtitle && (
-            <p className="mt-1 text-[13px] text-muted-foreground">
-              {active.subtitle}
-            </p>
-          )}
-          {active.meta && active.meta.length > 0 && (
-            <dl className="mt-10 w-full max-w-[230px] text-[12px]">
-              {active.meta.map((row) => (
-                <div key={row.label} className="flex justify-between py-[5px]">
-                  <dt className="text-muted-foreground">{row.label}</dt>
-                  <dd className="font-medium text-foreground">{row.value}</dd>
-                </div>
-              ))}
-            </dl>
-          )}
-        </div>
+
+      {showCaption && active && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selected}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25 }}
+            className="text-center max-w-xl mx-auto mt-4 px-4"
+          >
+            <h3 className="text-xl sm:text-2xl font-display font-medium text-foreground">
+              {active.title}
+            </h3>
+            {active.description && (
+              <p className="mt-1 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                {active.description}
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
       )}
-      {showPagination && (
-        <div className="mt-6 flex items-center justify-center gap-2">
-          {slides.map((_, index) => (
+
+      {showPagination && count > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-6">
+          {slides.map((_, i) => (
             <button
-              key={index}
-              type="button"
-              aria-label={`Go to slide ${index + 1}`}
-              aria-current={index === selected}
-              onClick={() => goTo(index)}
+              key={i}
+              onClick={() => setSelected(i)}
+              aria-label={`Go to slide ${i + 1}`}
               className={cn(
-                "size-2 rounded-full bg-foreground transition-opacity",
-                index === selected ? "opacity-100" : "opacity-30",
+                "h-2 rounded-full transition-all duration-300",
+                i === selected
+                  ? "w-8 bg-primary"
+                  : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
               )}
             />
           ))}

@@ -1,5 +1,4 @@
 import { Check } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const tiers = [
   {
@@ -54,7 +53,7 @@ const tiers = [
 
 export function Pricing() {
   return (
-    <div className="py-24 sm:py-32">
+    <section id="pricing" className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-base font-semibold leading-7 text-purple-400">Pricing</h2>
@@ -110,17 +109,25 @@ export function Pricing() {
                     </span>
                   )}
                 </p>
-                <Link
-                  to="/#contact"
+
+                <a
+                  href={tier.href}
+                  onClick={(e) => {
+                    if (tier.href.startsWith("#")) {
+                      e.preventDefault();
+                      document.getElementById(tier.href.substring(1))?.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
                   aria-describedby={tier.id}
-                  className={`mt-6 block rounded-xl py-2.5 px-3 text-center text-sm font-semibold leading-6 transition-colors ${
+                  className={`mt-6 block rounded-xl py-2.5 px-3 text-center text-sm font-semibold leading-6 cursor-pointer transition-colors ${
                     tier.featured
                       ? "bg-white text-purple-700 hover:bg-purple-50 shadow-md font-bold"
                       : "bg-purple-600 text-white hover:bg-purple-500 shadow-sm"
                   }`}
                 >
                   {tier.priceMonthly === "Custom" ? "Contact sales" : "Start free trial"}
-                </Link>
+                </a>
+
                 <ul
                   role="list"
                   className={`mt-8 space-y-3 text-sm leading-6 ${
@@ -144,7 +151,6 @@ export function Pricing() {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
-export default Pricing;
