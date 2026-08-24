@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { Shield, Lock, Eye, AlertTriangle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { PlasmaShader } from "./PlasmaShader";
 import { debugLog } from "@/lib/debugLog";
 
 const features: {
@@ -55,26 +54,29 @@ export function PlatformSection() {
 
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     if (v > 0.02 && v < 0.98) {
-      debugLog("PlatformSection.tsx:progress", "platform scroll progress", {
-        progress: v,
-        introDone: v > INTRO_END,
-      }, "H-platform", "post-fix-v3");
+      debugLog(
+        "PlatformSection.tsx:progress",
+        "platform scroll progress",
+        {
+          progress: v,
+          introDone: v > INTRO_END,
+        },
+        "H-platform",
+        "post-fix-v3"
+      );
     }
   });
 
-  const introOpacity = useTransform(scrollYProgress, [0, INTRO_END * 0.7, INTRO_END], [1, 1, 0]);
-  const anchoredOpacity = useTransform(scrollYProgress, [INTRO_END * 0.85, INTRO_END + 0.02], [0, 1]);
+  const anchoredOpacity = useTransform(scrollYProgress, [0, INTRO_END + 0.08], [0, 1]);
 
   return (
     <section
       id="platform"
       ref={sectionRef}
       style={{ height: `${STEP_COUNT * VH_PER_STEP}vh` }}
-      className="relative z-20"
+      className="relative z-10 bg-transparent"
     >
-      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#1a0f2e]">
-        <PlasmaShader className="absolute inset-0 w-full h-full block" />
-
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-transparent">
         <div
           className="absolute inset-0 pointer-events-none z-[1]"
           style={{
@@ -82,20 +84,6 @@ export function PlatformSection() {
               "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 20%, rgba(15,8,30,0.55) 100%)",
           }}
         />
-
-        <motion.div
-          style={{ opacity: introOpacity }}
-          className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none"
-        >
-          <div className="text-center px-8">
-            <p className="text-[11px] sm:text-xs font-medium tracking-[0.25em] uppercase text-white/50 mb-5">
-              Scroll to explore
-            </p>
-            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display text-white leading-[1.08]">
-              The Platform
-            </h2>
-          </div>
-        </motion.div>
 
         <motion.div
           style={{ opacity: anchoredOpacity }}
