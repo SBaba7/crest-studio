@@ -23,11 +23,11 @@ const PLATFORM_ENTER_END = 0.48;
 
 // Phase 4: once centered, keep it there for a while despite wheel input.
 const PLATFORM_HOLD_START = PLATFORM_ENTER_END;
-const PLATFORM_HOLD_END = 0.64;
+const PLATFORM_HOLD_END = 0.69;
 
-// Phase 5: finally move the title into the top-left anchor.
-const PLATFORM_MOVE_START = 0.66;
-const PLATFORM_MOVE_END = 0.82;
+// Phase 5: a short, decisive move into the top-left anchor.
+const PLATFORM_MOVE_START = 0.70;
+const PLATFORM_MOVE_END = 0.78;
 
 // Phase 6: platform feature sequence.
 const FEATURES_START = PLATFORM_MOVE_END;
@@ -92,7 +92,6 @@ export function Hero() {
     [0, 0.65, 1]
   );
 
-  // Stay visually centered through the entire hold phase.
   const platformTitleY = useTransform(
     scrollYProgress,
     [PLATFORM_ENTER_START, PLATFORM_ENTER_END, PLATFORM_HOLD_END, PLATFORM_MOVE_END],
@@ -113,14 +112,14 @@ export function Hero() {
 
   const anchoredLineOpacity = useTransform(
     scrollYProgress,
-    [PLATFORM_MOVE_START, PLATFORM_MOVE_START + 0.06],
+    [PLATFORM_MOVE_START, PLATFORM_MOVE_START + 0.03],
     [0, 1]
   );
 
-  const featureProgress = useTransform(
+  const remainingProgress = useTransform(
     scrollYProgress,
     [FEATURES_START, FEATURES_END],
-    [0, 1]
+    [1, 0]
   );
 
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
@@ -168,7 +167,7 @@ export function Hero() {
           featuresActive: progress >= FEATURES_START,
         },
         "H-cinematic",
-        "platform-scroll-v2"
+        "platform-scroll-v3"
       );
     }
   });
@@ -179,7 +178,7 @@ export function Hero() {
       "hero cinematic section mounted",
       { sectionHeight: `${CINEMATIC_HEIGHT}vh` },
       "H-cinematic",
-      "platform-scroll-v2"
+      "platform-scroll-v3"
     );
   }, []);
 
@@ -283,7 +282,7 @@ export function Hero() {
                 >
                   <div className="h-px bg-white/20 overflow-hidden">
                     <motion.div
-                      style={{ scaleX: featureProgress }}
+                      style={{ scaleX: remainingProgress }}
                       className="h-full w-full origin-left bg-white/80"
                     />
                   </div>
@@ -329,13 +328,15 @@ function PlatformFeature({
   const end = start + segment;
   const mid = start + segment * 0.5;
 
+  // Keep each feature calm and readable instead of flying vertically through the viewport.
+  const fadeWindow = segment * 0.08;
   const opacity = useTransform(
     scrollYProgress,
-    [start, start + 0.025, end - 0.025, end],
+    [start, start + fadeWindow, end - fadeWindow, end],
     [0, 1, 1, 0]
   );
-  const y = useTransform(scrollYProgress, [start, mid, end], [40, 0, -40]);
-  const scale = useTransform(scrollYProgress, [start, mid, end], [0.98, 1, 0.98]);
+  const y = useTransform(scrollYProgress, [start, mid, end], [14, 0, -14]);
+  const scale = useTransform(scrollYProgress, [start, mid, end], [0.995, 1, 0.995]);
 
   return (
     <motion.div
