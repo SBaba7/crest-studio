@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
@@ -7,15 +8,25 @@ import { BookDemoPage } from "./pages/BookDemoPage";
 import { Legal } from "./pages/Legal";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
+
+  return null;
+}
+
 function AppContent() {
   const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
-  const isHomePage = location.pathname === "/";
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-primary/20">
+      <ScrollToTop />
       {!isAuthPage && <Navbar />}
-      <main className="flex-grow">
+      <main className="flex-1">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -29,7 +40,7 @@ function AppContent() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      {!isAuthPage && !isHomePage && <Footer />}
+      {!isAuthPage && <Footer />}
     </div>
   );
 }
