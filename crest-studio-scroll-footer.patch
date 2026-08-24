@@ -1,0 +1,113 @@
+diff --git a/src/components/Hero.tsx b/src/components/Hero.tsx
+index 0b50c9b..2a971c7 100644
+--- a/src/components/Hero.tsx
++++ b/src/components/Hero.tsx
+@@ -1,6 +1,6 @@
+ import { useEffect, useRef, useState } from "react";
+ import { Link } from "react-router-dom";
+-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
++import { motion, useScroll, useSpring, useTransform, useMotionValueEvent } from "framer-motion";
+ import { PlasmaShader } from "./PlasmaShader";
+ import { ArrowDown, Shield, Lock, Eye, AlertTriangle } from "lucide-react";
+ import type { LucideIcon } from "lucide-react";
+@@ -73,38 +73,50 @@ export function Hero() {
+     offset: ["start start", "end end"],
+   });
+ 
++  // Raw scrollYProgress updates once per native "scroll" event, which can fire
++  // faster (and less evenly) than the display refresh rate on some browsers —
++  // that's what made the frame pull-in and card transitions feel stepped.
++  // Springing it re-times every downstream update to Framer's rAF loop, so
++  // motion stays smooth and interpolated between scroll ticks.
++  const smoothProgress = useSpring(scrollYProgress, {
++    stiffness: 260,
++    damping: 38,
++    mass: 0.4,
++    restDelta: 0.0005,
++  });
++
+   const platformTitleOpacity = useTransform(
+-    scrollYProgress,
++    smoothProgress,
+     [PLATFORM_ENTER_START, PLATFORM_ENTER_END, PLATFORM_MOVE_END, PLATFORM_MOVE_END + 0.05],
+     [0, 1, 1, 0.95]
+   );
+   const platformTitleY = useTransform(
+-    scrollYProgress,
++    smoothProgress,
+     [PLATFORM_ENTER_START, PLATFORM_ENTER_END, PLATFORM_MOVE_START, PLATFORM_MOVE_END],
+     ["60vh", "0vh", "0vh", "-38vh"]
+   );
+   const platformTitleX = useTransform(
+-    scrollYProgress,
++    smoothProgress,
+     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
+     ["0vw", "-36vw"]
+   );
+   const platformTitleScale = useTransform(
+-    scrollYProgress,
++    smoothProgress,
+     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
+     [1, 0.72]
+   );
+   const anchoredLineOpacity = useTransform(
+-    scrollYProgress,
++    smoothProgress,
+     [PLATFORM_MOVE_START, PLATFORM_MOVE_END],
+     [0, 1]
+   );
+   const remainingProgress = useTransform(
+-    scrollYProgress,
++    smoothProgress,
+     [FEATURES_START, FEATURES_END],
+     [1, 0]
+   );
+ 
+-  useMotionValueEvent(scrollYProgress, "change", (progress) => {
++  useMotionValueEvent(smoothProgress, "change", (progress) => {
+     const borderDone = progress >= BORDER_EXPAND_END;
+     const expansion = Math.min(
+       1,
+@@ -241,7 +253,7 @@ export function Hero() {
+                 feature={feature}
+                 index={index}
+                 total={platformFeatures.length}
+-                scrollYProgress={scrollYProgress}
++                scrollYProgress={smoothProgress}
+               />
+             ))}
+ 
+diff --git a/src/pages/Legal.tsx b/src/pages/Legal.tsx
+index 2e9cd74..ccc0c3f 100644
+--- a/src/pages/Legal.tsx
++++ b/src/pages/Legal.tsx
+@@ -60,7 +60,7 @@ export function Legal() {
+   const content = CONTENT[location.pathname as keyof typeof CONTENT] ?? CONTENT["/privacy"];
+ 
+   return (
+-    <main className="min-h-screen bg-background text-foreground px-6 pt-32 pb-24 lg:px-8">
++    <div className="min-h-full bg-background text-foreground px-6 pt-32 pb-24 lg:px-8">
+       <div className="mx-auto max-w-4xl">
+         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-12">
+           <ArrowLeft className="h-4 w-4" />
+@@ -86,6 +86,6 @@ export function Legal() {
+           ))}
+         </div>
+       </div>
+-    </main>
++    </div>
+   );
+ }
+diff --git a/src/pages/NotFoundPage.tsx b/src/pages/NotFoundPage.tsx
+index 6c9bba2..41383c3 100644
+--- a/src/pages/NotFoundPage.tsx
++++ b/src/pages/NotFoundPage.tsx
+@@ -2,7 +2,7 @@ import { NotFound, Illustration } from "@/components/ui/not-found";
+ 
+ export function NotFoundPage() {
+   return (
+-    <div className="relative flex flex-col w-full justify-center min-h-svh bg-background p-6 md:p-10 pt-24">
++    <div className="relative flex flex-col w-full justify-center min-h-full bg-background p-6 md:p-10 pt-24">
+       <div className="relative max-w-5xl mx-auto w-full">
+         <Illustration className="absolute inset-0 w-full h-[50vh] opacity-[0.04] text-teal-400" />
+         <NotFound
