@@ -25,9 +25,6 @@
   --color-popover: hsl(var(--popover));
   --color-popover-foreground: hsl(var(--popover-foreground));
 
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
   --radius-xl: calc(var(--radius) + 12px);
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 4px);
@@ -87,14 +84,31 @@
     --radius: 1.5rem;
   }
 
-  * {
-    @apply border-border;
+  html,
+  body,
+  #root {
+    min-height: 100%;
   }
+
+  html {
+    background-color: hsl(var(--background));
+  }
+
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    background-color: hsl(var(--background));
+    @apply text-foreground font-sans antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  #root {
+    background-color: hsl(var(--background));
+  }
+
+  * {
+    @apply border-border;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight font-normal;
   }
