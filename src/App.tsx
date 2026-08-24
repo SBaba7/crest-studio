@@ -10,9 +10,10 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 function AppContent() {
   const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
+  const isHomePage = location.pathname === "/";
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20">
+    <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-primary/20">
       {!isAuthPage && <Navbar />}
       <main className="flex-grow">
         <Routes>
@@ -28,7 +29,7 @@ function AppContent() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      <Footer />
+      {!isAuthPage && !isHomePage && <Footer />}
     </div>
   );
 }
