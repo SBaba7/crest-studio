@@ -22,9 +22,10 @@ function AppContent() {
   const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
   const isHomePage = location.pathname === "/";
+  const isBookDemoPage = location.pathname === "/book-demo" || location.pathname === "/demo";
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-primary/20">
+    <div className={`flex min-h-screen flex-col text-foreground selection:bg-primary/20 ${isBookDemoPage ? "bg-transparent" : "bg-background"}`}>
       <ScrollToTop />
       {!isAuthPage && <Navbar />}
       <main className="flex-grow">
