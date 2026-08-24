@@ -1,6 +1,5 @@
 import { Hero } from "@/components/Hero";
 import { LogoMarquee } from "@/components/LogoMarquee";
-import { PlatformSection } from "@/components/PlatformSection";
 import { Stats } from "@/components/Stats";
 import { Testimonials } from "@/components/Testimonials";
 import { CTA } from "@/components/CTA";
@@ -75,10 +74,6 @@ export function Home() {
   return (
     <div className="flex flex-col">
       <Hero />
-
-      <div className="h-16 sm:h-20 bg-white" aria-hidden="true" />
-
-      <PlatformSection />
 
       <div className="relative z-10 bg-background">
         <LogoMarquee />
