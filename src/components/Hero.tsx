@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useMotionValueEvent, useTransform } from "framer-motion";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { PlasmaShader } from "./PlasmaShader";
 import { ArrowDown } from "lucide-react";
 import { debugLog } from "@/lib/debugLog";
@@ -24,23 +24,6 @@ export function Hero() {
     offset: ["start start", "end end"],
   });
 
-  const platformTitleOpacity = useTransform(
-    scrollYProgress,
-    [0.08, 0.18, 0.34, 0.72],
-    [0, 0.35, 1, 1]
-  );
-  const platformTitleX = useTransform(
-    scrollYProgress,
-    [0.08, 0.34],
-    ["0vw", "-38vw"]
-  );
-  const platformTitleY = useTransform(
-    scrollYProgress,
-    [0.08, 0.34],
-    ["0vh", "-38vh"]
-  );
-  const platformTitleScale = useTransform(scrollYProgress, [0.08, 0.34], [1, 0.68]);
-
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     const snapped = progress > 0.94 ? 1 : progress;
     const padding = snapped >= 1 ? 0 : Math.round(FRAME_PADDING * (1 - snapped));
@@ -51,7 +34,6 @@ export function Hero() {
     }
     if (innerRef.current) {
       innerRef.current.style.borderRadius = radius > 0 ? `${radius}px` : "0px";
-      innerRef.current.style.clipPath = `inset(0 round ${radius}px)`;
     }
     if (ringRef.current) {
       ringRef.current.style.opacity = radius >= 8 ? "1" : "0";
@@ -68,33 +50,21 @@ export function Hero() {
     const now = Date.now();
     if (now - lastLogRef.current > 150) {
       lastLogRef.current = now;
-      debugLog(
-        "Hero.tsx:progress",
-        "hero section scroll progress",
-        {
-          progress,
-          padding,
-          radius,
-          showContent: progress < CONTENT_HIDE_PROGRESS,
-          navShouldShow: progress > NAV_SHOW_PROGRESS,
-          snapped: snapped >= 1,
-        },
-        "H9-H12",
-        "post-fix-v3"
-      );
+      debugLog("Hero.tsx:progress", "hero section scroll progress", {
+        progress,
+        padding,
+        radius,
+        showContent: progress < CONTENT_HIDE_PROGRESS,
+        navShouldShow: progress > NAV_SHOW_PROGRESS,
+        snapped: snapped >= 1,
+      }, "H9-H12", "post-fix-v3");
     }
   });
 
   useEffect(() => {
-    debugLog(
-      "Hero.tsx:mount",
-      "hero section mounted",
-      {
-        sectionHeight: `calc(100dvh + ${SCROLL_RANGE}px)`,
-      },
-      "H12",
-      "post-fix-v3"
-    );
+    debugLog("Hero.tsx:mount", "hero section mounted", {
+      sectionHeight: `calc(100dvh + ${SCROLL_RANGE}px)`,
+    }, "H12", "post-fix-v3");
   }, []);
 
   return (
@@ -104,19 +74,12 @@ export function Hero() {
       style={{ height: `calc(100dvh + ${SCROLL_RANGE}px)` }}
       className="relative bg-white"
     >
-      <div className="fixed inset-0 top-0 h-[100dvh] w-full bg-white z-0 pointer-events-none">
-        <div
-          ref={outerRef}
-          className="absolute inset-0 bg-white"
-          style={{ padding: `${FRAME_PADDING}px` }}
-        >
+      <div className="sticky top-0 h-[100dvh] w-full bg-white z-0">
+        <div ref={outerRef} className="absolute inset-0 bg-white" style={{ padding: `${FRAME_PADDING}px` }}>
           <div
             ref={innerRef}
             className="relative w-full h-full overflow-hidden bg-[#1a0f2e]"
-            style={{
-              borderRadius: `${FRAME_RADIUS}px`,
-              clipPath: `inset(0 round ${FRAME_RADIUS}px)`,
-            }}
+            style={{ borderRadius: `${FRAME_RADIUS}px` }}
           >
             <PlasmaShader className="absolute inset-0 w-full h-full block" />
 
@@ -143,7 +106,9 @@ export function Hero() {
                 Enterprise Cybersecurity
               </p>
               <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-display text-white leading-[1.08] text-balance">
-                Detect AI threats <span className="italic text-white/70">before</span> they reach your perimeter.
+                Detect AI threats{" "}
+                <span className="italic text-white/70">before</span>{" "}
+                they reach your perimeter.
               </h1>
             </motion.div>
 
@@ -154,7 +119,8 @@ export function Hero() {
               style={{ pointerEvents: showContent ? "auto" : "none" }}
             >
               <p className="text-sm sm:text-base text-white/55 max-w-sm leading-relaxed font-light">
-                Crest neutralizes deepfakes, AI-generated phishing, and zero-day payloads across email, endpoints, and cloud — from one platform.
+                Crest neutralizes deepfakes, AI-generated phishing, and zero-day
+                payloads across email, endpoints, and cloud — from one platform.
               </p>
               <div className="flex items-center gap-4 shrink-0">
                 <a
@@ -167,25 +133,6 @@ export function Hero() {
                 >
                   See platform →
                 </a>
-              </div>
-            </motion.div>
-
-            <motion.div
-              style={{
-                opacity: platformTitleOpacity,
-                x: platformTitleX,
-                y: platformTitleY,
-                scale: platformTitleScale,
-              }}
-              className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none"
-            >
-              <div className="text-center px-8">
-                <p className="text-[11px] sm:text-xs font-medium tracking-[0.25em] uppercase text-white/50 mb-5">
-                  Scroll to explore
-                </p>
-                <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display text-white leading-[1.08]">
-                  The Platform
-                </h2>
               </div>
             </motion.div>
 
