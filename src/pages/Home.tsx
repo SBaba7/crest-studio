@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Hero } from "@/components/Hero";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { LogoMarquee } from "@/components/LogoMarquee";
@@ -7,6 +6,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { Pricing } from "@/components/Pricing";
 import { FAQ } from "@/components/FAQ";
 import { CTA } from "@/components/CTA";
+import { Footer } from "@/components/Footer";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { motion } from "framer-motion";
 
@@ -54,19 +54,19 @@ export function Home() {
 
         <Stats />
 
-        <section id="features" className="py-24 sm:py-32 bg-secondary/30">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-16 text-center">
-            <div className="max-w-2xl mx-auto">
+        <section id="features" className="bg-secondary/30 py-24 sm:py-32">
+          <div className="mx-auto mb-16 max-w-7xl px-6 text-center lg:px-8">
+            <div className="mx-auto max-w-2xl">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <p className="text-sm font-semibold tracking-widest text-primary uppercase">
+                <p className="text-sm font-semibold uppercase tracking-widest text-primary">
                   01 / Platform
                 </p>
-                <h2 className="mt-4 text-4xl sm:text-5xl font-display text-foreground leading-tight">
+                <h2 className="mt-4 font-display text-4xl leading-tight text-foreground sm:text-5xl">
                   One console for every surface attackers target.
                 </h2>
               </motion.div>
@@ -75,22 +75,27 @@ export function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="mt-6 text-lg text-muted-foreground leading-relaxed"
+                className="mt-6 text-lg leading-relaxed text-muted-foreground"
               >
                 Explore how Crest unifies detection across communication, identity, endpoints, and cloud infrastructure.
               </motion.p>
             </div>
           </div>
-          <CoverflowCarousel slides={SLIDES} showCaption showNavigation showPagination autoPlay autoPlayInterval={4500} />
+          <CoverflowCarousel
+            slides={SLIDES}
+            showCaption
+            showNavigation
+            showPagination
+            autoPlay
+            autoPlayInterval={4500}
+          />
         </section>
 
         <Testimonials />
-
         <Pricing />
-
         <FAQ />
-
         <CTA />
+        <Footer />
       </div>
     </div>
   );
