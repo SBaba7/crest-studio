@@ -8,7 +8,12 @@
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    "jsx": "react-jsx",
+
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"]
@@ -18,7 +23,6 @@
     "moduleDetection": "force",
     "noEmit": true,
 
-    /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
