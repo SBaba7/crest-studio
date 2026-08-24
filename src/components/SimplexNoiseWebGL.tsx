@@ -300,15 +300,16 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
     try {
       const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
       const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-      program = gl.createProgram();
-      if (!program) throw new Error("Unable to create WebGL program.");
-      gl.attachShader(program, vertexShader);
-      gl.attachShader(program, fragmentShader);
-      gl.linkProgram(program);
+      const linkedProgram = gl.createProgram();
+      if (!linkedProgram) throw new Error("Unable to create WebGL program.");
+      program = linkedProgram;
+      gl.attachShader(linkedProgram, vertexShader);
+      gl.attachShader(linkedProgram, fragmentShader);
+      gl.linkProgram(linkedProgram);
       gl.deleteShader(vertexShader);
       gl.deleteShader(fragmentShader);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        throw new Error(gl.getProgramInfoLog(program) || "Unable to link WebGL program.");
+      if (!gl.getProgramParameter(linkedProgram, gl.LINK_STATUS)) {
+        throw new Error(gl.getProgramInfoLog(linkedProgram) || "Unable to link WebGL program.");
       }
 
       buffer = gl.createBuffer();
@@ -316,19 +317,19 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
 
-      const position = gl.getAttribLocation(program, "a_position");
-      gl.useProgram(program);
+      const position = gl.getAttribLocation(linkedProgram, "a_position");
+      gl.useProgram(linkedProgram);
       gl.enableVertexAttribArray(position);
       gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
-      const scene = gl.getUniformLocation(program, "u_scene");
-      const shape = gl.getUniformLocation(program, "u_shape");
-      const surface = gl.getUniformLocation(program, "u_surface");
-      const finish = gl.getUniformLocation(program, "u_finish");
-      const transform = gl.getUniformLocation(program, "u_transform");
-      const space = gl.getUniformLocation(program, "u_space");
-      const cursor = gl.getUniformLocation(program, "u_cursor");
-      const colors = Array.from({ length: 8 }, (_, index) => gl.getUniformLocation(program, `u_colors[${index}]`));
+      const scene = gl.getUniformLocation(linkedProgram, "u_scene");
+      const shape = gl.getUniformLocation(linkedProgram, "u_shape");
+      const surface = gl.getUniformLocation(linkedProgram, "u_surface");
+      const finish = gl.getUniformLocation(linkedProgram, "u_finish");
+      const transform = gl.getUniformLocation(linkedProgram, "u_transform");
+      const space = gl.getUniformLocation(linkedProgram, "u_space");
+      const cursor = gl.getUniformLocation(linkedProgram, "u_cursor");
+      const colors = Array.from({ length: 8 }, (_, index) => gl.getUniformLocation(linkedProgram, `u_colors[${index}]`));
 
       const palette = [
         [0.267, 0.286, 0.812],
@@ -352,7 +353,7 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
       const render = (now: number) => {
         if (!running) return;
         resize();
-        gl.useProgram(program);
+        gl.useProgram(linkedProgram);
         gl.uniform4f(scene, canvas.width, canvas.height, ((now - startedAt) / 1000) * 0.57, 5.0);
         gl.uniform4f(shape, 1.26, 0.35, 0.28, 0.0);
         gl.uniform4f(surface, 1.82, 1.0, 0.0, 1.0);
@@ -360,8 +361,14 @@ export function SimplexNoiseWebGL({ className = "" }: { className?: string }) {
         gl.uniform4f(transform, 1.0, 0.0, 0.0, 0.0);
         gl.uniform4f(space, 0.0, 0.0, 0.0, 0.0);
         gl.uniform4f(cursor, 0.0, 2.0, 0.65, 0.46);
-        palette.forEach((color, index) => gl.uniform3f(colors[index], color[0], color[1], color[2]));
-        for (let index = palette.length; index < 8; index += 1) gl.uniform3f(colors[index], 0, 0, 0);
+        palette.forEach((color, index) => {
+          const location = colors[index];
+          if (location) gl.uniform3f(location, color[0], color[1], color[2]);
+        });
+        for (let index = palette.length; index < 8; index += 1) {
+          const location = colors[index];
+          if (location) gl.uniform3f(location, 0, 0, 0);
+        }
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         animationFrame = window.requestAnimationFrame(render);
       };
