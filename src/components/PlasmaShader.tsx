@@ -53,11 +53,7 @@ export function PlasmaShader({ className }: PlasmaShaderProps) {
 
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]),
-      gl.STATIC_DRAW
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const aPosition = gl.getAttribLocation(program, "aPosition");
     gl.enableVertexAttribArray(aPosition);
     gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
@@ -95,15 +91,12 @@ export function PlasmaShader({ className }: PlasmaShaderProps) {
 
     let raf = 0;
     const start = performance.now();
-
     const draw = () => {
       intensityRef.current += (targetIntensityRef.current - intensityRef.current) * 0.06;
-
       gl.uniform2f(uResolution, canvas.width, canvas.height);
       gl.uniform1f(uTime, (performance.now() - start) * 0.001);
       gl.uniform1f(uIntensity, intensityRef.current);
       gl.uniform2f(uPointer, pointerRef.current.x, pointerRef.current.y);
-
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       raf = requestAnimationFrame(draw);
     };
@@ -125,6 +118,11 @@ export function PlasmaShader({ className }: PlasmaShaderProps) {
     <canvas
       ref={canvasRef}
       className={className}
+      style={{
+        borderRadius: "var(--shader-radius, 32px)",
+        overflow: "hidden",
+        display: "block",
+      }}
       aria-hidden="true"
     />
   );
