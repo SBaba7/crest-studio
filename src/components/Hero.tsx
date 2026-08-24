@@ -7,7 +7,7 @@ import { debugLog } from "@/lib/debugLog";
 
 const FRAME_PADDING = 24;
 const FRAME_RADIUS = 32;
-const CINEMATIC_HEIGHT = 520;
+const CINEMATIC_HEIGHT = 560;
 
 // Phase 1: hero content leaves.
 const HERO_HIDE_START = 0.02;
@@ -29,10 +29,10 @@ const PLATFORM_HOLD_END = 0.69;
 const PLATFORM_MOVE_START = 0.70;
 const PLATFORM_MOVE_END = 0.78;
 
-// Phase 6: platform feature sequence.
-const FEATURES_START = PLATFORM_MOVE_END;
-const FEATURES_END = 0.98;
-export const NAV_SHOW_PROGRESS = 0.78;
+// Phase 6: deliberate breathing room before the first platform card.
+const FEATURES_START = 0.84;
+const FEATURES_END = 0.99;
+export const NAV_SHOW_PROGRESS = BORDER_EXPAND_END + 0.02;
 
 type PlatformFeature = {
   name: string;
@@ -164,10 +164,11 @@ export function Hero() {
           borderDone,
           platformCentered: progress >= PLATFORM_ENTER_END && progress < PLATFORM_MOVE_START,
           platformAnchored: progress >= PLATFORM_MOVE_END,
+          featureGap: progress >= PLATFORM_MOVE_END && progress < FEATURES_START,
           featuresActive: progress >= FEATURES_START,
         },
         "H-cinematic",
-        "platform-scroll-v3"
+        "platform-scroll-v4"
       );
     }
   });
@@ -178,7 +179,7 @@ export function Hero() {
       "hero cinematic section mounted",
       { sectionHeight: `${CINEMATIC_HEIGHT}vh` },
       "H-cinematic",
-      "platform-scroll-v3"
+      "platform-scroll-v4"
     );
   }, []);
 
@@ -328,15 +329,15 @@ function PlatformFeature({
   const end = start + segment;
   const mid = start + segment * 0.5;
 
-  // Keep each feature calm and readable instead of flying vertically through the viewport.
-  const fadeWindow = segment * 0.08;
+  // Slow vertical carousel: each card rises in from below, stays readable, then exits above.
+  const fadeWindow = Math.min(segment * 0.12, 0.012);
   const opacity = useTransform(
     scrollYProgress,
     [start, start + fadeWindow, end - fadeWindow, end],
     [0, 1, 1, 0]
   );
-  const y = useTransform(scrollYProgress, [start, mid, end], [14, 0, -14]);
-  const scale = useTransform(scrollYProgress, [start, mid, end], [0.995, 1, 0.995]);
+  const y = useTransform(scrollYProgress, [start, mid, end], [28, 0, -20]);
+  const scale = useTransform(scrollYProgress, [start, mid, end], [0.985, 1, 0.99]);
 
   return (
     <motion.div
