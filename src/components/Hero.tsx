@@ -192,7 +192,7 @@ function DesktopHero() {
             }}
           >
             {/* Purple Plasma Shader */}
-                        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.5] contrast-[1.18] brightness-[1.08]" />
+            <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.3] contrast-[1.18] brightness-[1.08]" />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.12)_0%,rgba(8,5,14,0.04)_45%,rgba(8,5,14,0.2)_100%)]" />
 
             {/* Clean subtle border without glow */}
@@ -252,7 +252,7 @@ function DesktopHero() {
                 <p className="text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-white/70 mb-4">
                   Scroll to explore
                 </p>
-                                <div id="platform">
+                <div id="platform">
                   <ScrollFloat
                     containerClassName="font-display text-5xl leading-[1.08] text-white sm:text-6xl lg:text-7xl"
                     animationDuration={0.9}
@@ -323,7 +323,7 @@ function DesktopHero() {
 function MobileHero() {
   return (
     <section id="home" className="relative min-h-[42rem] overflow-hidden bg-[#2e1050] text-white">
-      <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.5] contrast-[1.18] brightness-[1.08]" />
+      <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.3] contrast-[1.18] brightness-[1.08]" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.08)_0%,rgba(8,5,14,0.18)_48%,rgba(8,5,14,0.68)_100%)]" />
       <div className="pointer-events-none absolute inset-4 rounded-[1.5rem] border border-white/15" />
 
@@ -385,7 +385,7 @@ function PlatformFeatureCard({
         {/* Top Header Row */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-display font-semibold text-white tracking-tight leading-[1.1] mb-2.5">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-display text-white tracking-tight leading-[1.1] mb-2.5">
               {feature.name}
             </h3>
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full border border-white/30 bg-white/5 text-[11px] sm:text-xs font-medium text-white/90 backdrop-blur-sm">

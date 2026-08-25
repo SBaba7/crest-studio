@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { debugLog } from "@/lib/debugLog";
+import { useLenis } from "lenis/react";
 import { NAV_SHOW_PROGRESS } from "./Hero";
 import { scrollToSection } from "@/lib/scrollToSection";
 
@@ -16,6 +16,7 @@ const navLinks = [
 export function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const lenis = useLenis();
   const isHomePage = location.pathname === "/";
   const isBookDemoPage = location.pathname === "/book-demo" || location.pathname === "/demo";
 
@@ -48,9 +49,9 @@ export function Navbar() {
       setVisible(progress > NAV_SHOW_PROGRESS);
     };
 
+    const sections = navLinks.map((link) => link.href.substring(1));
     const onScroll = () => {
       const y = window.scrollY;
-      const sections = navLinks.map((link) => link.href.substring(1));
       let current = "";
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -82,7 +83,7 @@ export function Navbar() {
 
     if (isHomePage) {
       navigate({ hash: href });
-      scrollToSection(targetId);
+      scrollToSection(targetId, "smooth", lenis);
       return;
     }
 

@@ -49,7 +49,7 @@ export function Testimonials() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="mt-4 text-3xl font-display font-medium text-foreground sm:text-5xl"
+            className="mt-4 text-3xl font-display text-foreground sm:text-5xl"
           >
             Trusted by security leaders
           </motion.p>

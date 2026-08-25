@@ -1,11 +1,13 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLenis } from "lenis/react";
 import { PlasmaShader } from "./PlasmaShader";
 import { scrollToSection } from "@/lib/scrollToSection";
 
 export function Footer() {
   const location = useLocation();
   const navigate = useNavigate();
+  const lenis = useLenis();
   const product = [
     { label: "Platform", id: "platform" },
     { label: "Features", id: "features" },
@@ -26,7 +28,7 @@ export function Footer() {
 
     if (location.pathname === "/") {
       navigate({ hash });
-      scrollToSection(id);
+      scrollToSection(id, "smooth", lenis);
       return;
     }
 
@@ -34,9 +36,9 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative isolate z-10 overflow-hidden border-t border-white/10 bg-[#11061b] text-white md:bg-transparent">
+    <footer className="relative isolate z-10 overflow-hidden border-t border-white/10 bg-[#11061b] text-white">
       <div className="pointer-events-none absolute inset-0 hidden overflow-hidden opacity-85 md:block" aria-hidden="true">
-        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.5] contrast-[1.18] brightness-[1.08]" />
+        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.3] contrast-[1.18] brightness-[1.08]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.12)_0%,rgba(8,5,14,0.04)_45%,rgba(8,5,14,0.2)_100%)]" />
       </div>
       <div className="relative mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
@@ -86,7 +88,11 @@ export function Footer() {
           <div className="flex items-center gap-4 sm:gap-6">
             <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-white/85">LinkedIn</a>
             <a href="https://x.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-white/85">X</a>
-            <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="ml-auto transition-colors hover:text-white/85 sm:ml-2">
+            <button
+              type="button"
+              onClick={() => (lenis ? lenis.scrollTo(0) : window.scrollTo({ top: 0, behavior: "smooth" }))}
+              className="ml-auto transition-colors hover:text-white/85 sm:ml-2"
+            >
               Back to top ↑
             </button>
           </div>

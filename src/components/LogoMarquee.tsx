@@ -29,7 +29,7 @@ export function LogoMarquee() {
                 className="h-5 w-auto max-w-8 opacity-25 brightness-0 invert transition-opacity group-hover:opacity-45"
                 loading="lazy"
               />
-              <span className="whitespace-nowrap text-base font-display font-medium tracking-[-0.02em] text-foreground/25 transition-colors hover:text-foreground/45 sm:text-lg">
+              <span className="whitespace-nowrap text-base font-display tracking-[-0.02em] text-foreground/25 transition-colors hover:text-foreground/45 sm:text-lg">
                 {company.name}
               </span>
             </div>

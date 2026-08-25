@@ -86,6 +86,7 @@
 
   html {
     scroll-behavior: auto;
+    @apply bg-background;
   }
 
   body {

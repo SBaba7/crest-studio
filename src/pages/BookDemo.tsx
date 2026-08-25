@@ -206,7 +206,7 @@ export function BookDemo() {
               className="space-y-6"
             >
               <div>
-                <h1 className="text-2xl sm:text-3xl font-display font-semibold text-foreground tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-display text-foreground tracking-tight">
                   Tell us about your organization
                 </h1>
                 <p className="text-sm text-muted-foreground font-light mt-1.5 leading-relaxed">
@@ -369,7 +369,7 @@ export function BookDemo() {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-display font-semibold text-foreground tracking-tight">
+                  <h2 className="text-2xl font-display text-foreground tracking-tight">
                     Select a date and time
                   </h2>
                   <p className="text-xs sm:text-sm text-muted-foreground font-light mt-1">
@@ -555,7 +555,7 @@ export function BookDemo() {
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 text-xs font-semibold uppercase tracking-wider mb-2">
                   Demo Confirmed
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-display font-semibold text-foreground">
+                <h2 className="text-2xl sm:text-3xl font-display text-foreground">
                   You're all set, {formData.firstName || "there"}!
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-foreground font-light mt-1.5 max-w-md mx-auto">

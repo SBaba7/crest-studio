@@ -237,7 +237,7 @@ export function CoverflowCarousel({
             transition={{ duration: 0.25 }}
             className="text-center max-w-xl mx-auto mt-4 px-4"
           >
-            <h3 className="text-xl sm:text-2xl font-display font-medium text-foreground">
+            <h3 className="text-xl sm:text-2xl font-display text-foreground">
               {active.title}
             </h3>
             {active.description && (

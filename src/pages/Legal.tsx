@@ -72,7 +72,7 @@ export function Legal() {
             <ShieldCheck className="h-3.5 w-3.5" />
             {content.eyebrow}
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-semibold tracking-tight">{content.title}</h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display tracking-tight">{content.title}</h1>
           <p className="mt-5 max-w-2xl text-base sm:text-lg leading-8 text-muted-foreground font-light">{content.intro}</p>
           <p className="mt-4 text-xs text-muted-foreground/70">Last updated: August 23, 2026</p>
         </div>
@@ -80,7 +80,7 @@ export function Legal() {
         <div className="space-y-10">
           {content.sections.map(([title, body]) => (
             <section key={title} className="border-t border-border pt-8">
-              <h2 className="text-xl font-display font-semibold tracking-tight">{title}</h2>
+              <h2 className="text-xl font-display tracking-tight">{title}</h2>
               <p className="mt-3 text-sm sm:text-base leading-7 text-muted-foreground">{body}</p>
             </section>
           ))}
