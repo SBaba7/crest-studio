@@ -48,13 +48,6 @@ export function Login() {
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           <span>Back to Crest</span>
         </Link>
-        <Link to="/" className="group flex h-7 w-28 items-center sm:h-8 sm:w-32" aria-label="Crest home">
-          <img
-            src="/login_w.svg"
-            alt="Crest"
-            className="h-full w-full object-contain object-right transition-opacity duration-300 group-hover:opacity-70"
-          />
-        </Link>
       </header>
 
       <main className="relative z-10 mx-auto grid min-h-screen max-w-7xl items-center gap-12 px-6 py-28 lg:grid-cols-[1fr_460px] lg:px-12">
