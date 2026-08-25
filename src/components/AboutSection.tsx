@@ -4,15 +4,15 @@ import { CrestChromaWaves } from "./CrestChromaWaves";
 
 const galleryColumns = {
   left: [
-    "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=900&q=82",
-    "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=900&q=82",
-    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=900&q=82",
+    "/card-artwork.jpg",
+    "/card-artwork.jpg",
+    "/card-artwork.jpg",
   ],
-  center: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1400&q=85",
+  center: "/card-artwork.jpg",
   right: [
-    "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=900&q=82",
-    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=82",
-    "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=900&q=82",
+    "/card-artwork.jpg",
+    "/card-artwork.jpg",
+    "/card-artwork.jpg",
   ],
 };
 
@@ -57,7 +57,7 @@ export function AboutSection() {
 
   return (
     <section id="about" className="relative isolate overflow-clip bg-[#08050e] py-24 text-white sm:py-32 lg:py-40">
-      <CrestChromaWaves className="pointer-events-none absolute inset-0 opacity-70 saturate-[1.35] contrast-[1.12] brightness-[1.05] [mask-image:linear-gradient(to_bottom,transparent_0%,black_12%,black_86%,transparent_100%)]" />
+      <CrestChromaWaves className="pointer-events-none absolute inset-0 opacity-70 saturate-[1.5] contrast-[1.18] brightness-[1.08] [mask-image:linear-gradient(to_bottom,transparent_0%,black_12%,black_86%,transparent_100%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,transparent_0%,rgba(8,5,14,0.22)_45%,rgba(8,5,14,0.8)_100%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">

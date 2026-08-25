@@ -72,14 +72,6 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           className="fixed inset-0 z-[9999] overflow-hidden bg-white"
           aria-hidden="true"
         >
-          <motion.img
-            src="/crest-logo-black.svg"
-            alt=""
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: phase === 1 ? 1 : 0, y: phase === 1 ? 0 : 10 }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="pointer-events-none absolute left-1/2 top-1/2 z-20 w-40 -translate-x-1/2 -translate-y-[calc(100%+1.9rem)] sm:w-48"
-          />
 
           <div
             className="absolute"
@@ -123,7 +115,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               />
 
               <motion.img
-                src="/crest-logo-white.svg"
+                src="/opening_w.svg"
                 alt=""
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: frameOpen ? 1 : 0, scale: frameOpen ? 1 : 0.96 }}

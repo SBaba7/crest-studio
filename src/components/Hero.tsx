@@ -172,7 +172,7 @@ export function Hero() {
             }}
           >
             {/* Purple Plasma Shader */}
-                        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.35] contrast-[1.12] brightness-[1.05]" />
+                        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.5] contrast-[1.18] brightness-[1.08]" />
             <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.12)_0%,rgba(8,5,14,0.04)_45%,rgba(8,5,14,0.2)_100%)]" />
 
             {/* Clean subtle border without glow */}

@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ScrollFloat } from "./ScrollFloat";
 import { ScrollReveal } from "./ScrollReveal";
+import { scrollToSection } from "@/lib/scrollToSection";
 
 export function CTA() {
   return (
@@ -48,7 +49,7 @@ export function CTA() {
               href="#pricing"
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth" });
+                scrollToSection("pricing");
               }}
               className="w-full sm:w-auto rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-white px-8 py-4 text-base font-medium transition-all text-center backdrop-blur-sm"
             >

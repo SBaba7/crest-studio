@@ -50,7 +50,7 @@ export function Login() {
         </Link>
         <Link to="/" className="group flex h-7 w-28 items-center sm:h-8 sm:w-32" aria-label="Crest home">
           <img
-            src="/crest-logo-white.svg"
+            src="/login_w.svg"
             alt="Crest"
             className="h-full w-full object-contain object-right transition-opacity duration-300 group-hover:opacity-70"
           />

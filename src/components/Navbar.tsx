@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { debugLog } from "@/lib/debugLog";
 import { NAV_SHOW_PROGRESS } from "./Hero";
+import { scrollToSection } from "@/lib/scrollToSection";
 
 const navLinks = [
   { label: "Platform", href: "#platform" },
@@ -58,31 +59,20 @@ export function Navbar() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMobileOpen(false);
-    const targetId = href.replace("#", "");
 
-    if (!isHomePage) {
+    const targetId = href.slice(1);
+    if (!targetId) {
       navigate("/");
-      setTimeout(() => {
-        if (targetId) {
-          document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
-        } else {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      }, 100);
       return;
     }
 
-    if (targetId === "") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    if (isHomePage) {
+      navigate({ hash: href });
+      scrollToSection(targetId);
       return;
     }
-    const elem = document.getElementById(targetId);
-    if (elem) {
-      window.scrollTo({
-        top: elem.offsetTop - 80,
-        behavior: "smooth",
-      });
-    }
+
+    navigate({ pathname: "/", hash: href });
   };
 
   const shellClass = isBookDemoPage

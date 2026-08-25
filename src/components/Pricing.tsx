@@ -1,12 +1,14 @@
 import { Check } from "lucide-react";
+import { Link } from "react-router-dom";
 import { ScrollFloat } from "./ScrollFloat";
 import { ScrollReveal } from "./ScrollReveal";
+import { ScrollVelocity } from "./ScrollVelocity";
 
 const tiers = [
   {
     name: "Starter",
     id: "tier-starter",
-    href: "#contact",
+    href: "/book-demo",
     priceMonthly: "$99",
     description: "Essential security for small teams getting started.",
     features: [
@@ -21,7 +23,7 @@ const tiers = [
   {
     name: "Pro",
     id: "tier-pro",
-    href: "#contact",
+    href: "/book-demo",
     priceMonthly: "$299",
     description: "Advanced protection for growing organizations.",
     features: [
@@ -37,7 +39,7 @@ const tiers = [
   {
     name: "Enterprise",
     id: "tier-enterprise",
-    href: "#contact",
+    href: "/book-demo",
     priceMonthly: "Custom",
     description: "Dedicated security infrastructure for large-scale operations.",
     features: [
@@ -127,14 +129,8 @@ export function Pricing() {
                   )}
                 </p>
 
-                <a
-                  href={tier.href}
-                  onClick={(e) => {
-                    if (tier.href.startsWith("#")) {
-                      e.preventDefault();
-                      document.getElementById(tier.href.substring(1))?.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
+                <Link
+                  to={tier.href}
                   aria-describedby={tier.id}
                   className={`mt-6 block rounded-xl py-2.5 px-3 text-center text-sm font-semibold leading-6 cursor-pointer transition-all ${
                     tier.featured
@@ -143,7 +139,7 @@ export function Pricing() {
                   }`}
                 >
                   {tier.priceMonthly === "Custom" ? "Contact sales" : "Start free trial"}
-                </a>
+                </Link>
 
                 <ul
                   role="list"
@@ -166,6 +162,15 @@ export function Pricing() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="relative left-1/2 mt-20 w-screen -translate-x-1/2 overflow-hidden border-y border-border/60 bg-background py-5 sm:mt-24 sm:py-7">
+          <ScrollVelocity
+            texts={["START TODAY", "FOR FREE"]}
+            velocity={42}
+            numCopies={8}
+            className="font-display text-[clamp(2.75rem,8vw,7rem)] font-bold leading-[0.9] tracking-[0.015em] [word-spacing:0.26em] text-foreground"
+          />
         </div>
       </div>
     </section>

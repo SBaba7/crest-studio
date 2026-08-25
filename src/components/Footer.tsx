@@ -1,12 +1,18 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { PlasmaShader } from "./PlasmaShader";
+import { scrollToSection } from "@/lib/scrollToSection";
 
 export function Footer() {
   const location = useLocation();
   const navigate = useNavigate();
-  const product = ["Platform", "Product", "Pricing", "FAQ"];
-  const company = ["About", "Contact"];
+  const product = [
+    { label: "Platform", id: "platform" },
+    { label: "Features", id: "features" },
+    { label: "Pricing", id: "pricing" },
+    { label: "FAQ", id: "faq" },
+  ];
+  const company = [{ label: "About", id: "about" }];
   const legal = [
     ["Privacy Policy", "/privacy"],
     ["Terms of Service", "/terms"],
@@ -16,17 +22,21 @@ export function Footer() {
 
   const scrollTo = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     event.preventDefault();
-    if (location.pathname !== "/") {
-      navigate(`/#${id.toLowerCase()}`);
+    const hash = `#${id}`;
+
+    if (location.pathname === "/") {
+      navigate({ hash });
+      scrollToSection(id);
       return;
     }
-    document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    navigate({ pathname: "/", hash });
   };
 
   return (
     <footer className="relative isolate z-10 overflow-hidden border-t border-white/10 bg-transparent text-white">
       <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-85" aria-hidden="true">
-        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.35] contrast-[1.12] brightness-[1.05]" />
+        <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.5] contrast-[1.18] brightness-[1.08]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.12)_0%,rgba(8,5,14,0.04)_45%,rgba(8,5,14,0.2)_100%)]" />
       </div>
       <div className="relative mx-auto max-w-7xl px-6 py-14 sm:py-20 lg:px-8 lg:py-24">
@@ -34,7 +44,7 @@ export function Footer() {
           <div className="max-w-sm">
             <Link to="/" className="group flex h-9 w-36 items-center sm:h-10 sm:w-40" aria-label="Crest home">
               <img
-                src="/crest-logo-white.svg"
+                src="/footer_w.svg"
                 alt="Crest"
                 className="h-full w-full object-contain object-left transition-opacity duration-300 group-hover:opacity-70"
               />
@@ -49,18 +59,19 @@ export function Footer() {
           </div>
 
           <FooterColumn title="Product">
-            {product.map((name) => (
-              <a key={name} href={`#${name.toLowerCase()}`} onClick={(event) => scrollTo(event, name)} className="footer-link">
-                {name}
+            {product.map((link) => (
+              <a key={link.id} href={`#${link.id}`} onClick={(event) => scrollTo(event, link.id)} className="footer-link">
+                {link.label}
               </a>
             ))}
           </FooterColumn>
           <FooterColumn title="Company">
-            {company.map((name) => (
-              <a key={name} href={`#${name.toLowerCase()}`} onClick={(event) => scrollTo(event, name)} className="footer-link">
-                {name}
+            {company.map((link) => (
+              <a key={link.id} href={`#${link.id}`} onClick={(event) => scrollTo(event, link.id)} className="footer-link">
+                {link.label}
               </a>
             ))}
+            <Link to="/book-demo" className="footer-link">Contact</Link>
             <Link to="/book-demo" className="footer-link">Book a demo</Link>
           </FooterColumn>
           <FooterColumn title="Legal">

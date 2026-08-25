@@ -8,13 +8,23 @@ import { Login } from "./pages/Login";
 import { BookDemoPage } from "./pages/BookDemoPage";
 import { Legal } from "./pages/Legal";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { scrollToSection } from "./lib/scrollToSection";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
+    if (pathname === "/" && hash) {
+      const targetId = decodeURIComponent(hash.slice(1));
+      const frame = window.requestAnimationFrame(() => {
+        scrollToSection(targetId);
+      });
+
+      return () => window.cancelAnimationFrame(frame);
+    }
+
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname]);
+  }, [hash, pathname]);
 
   return null;
 }
