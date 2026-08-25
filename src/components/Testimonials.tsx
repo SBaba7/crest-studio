@@ -49,13 +49,13 @@ export function Testimonials() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="mt-4 text-4xl sm:text-5xl font-display font-medium text-foreground"
+            className="mt-4 text-3xl font-display font-medium text-foreground sm:text-5xl"
           >
             Trusted by security leaders
           </motion.p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto mt-12 max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
             {testimonials.map((testimonial, index) => (
               <motion.div 
                 key={testimonial.author.name}
@@ -65,11 +65,11 @@ export function Testimonials() {
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 className="flex flex-col"
               >
-                <figure className="rounded-[2.5rem] bg-background p-10 shadow-sm ring-1 ring-border flex flex-col justify-between h-full transition-shadow hover:shadow-md">
+                <figure className="flex h-full flex-col justify-between rounded-[1.75rem] bg-background p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md sm:rounded-[2.5rem] sm:p-10">
                   <blockquote className="text-base leading-relaxed text-foreground font-light italic">
                     <p>{`"${testimonial.body}"`}</p>
                   </blockquote>
-                  <figcaption className="mt-8 flex items-center gap-x-4">
+                  <figcaption className="mt-6 flex items-center gap-x-4 sm:mt-8">
                     <img className="h-12 w-12 rounded-full object-cover ring-1 ring-border" src={testimonial.author.imageUrl} alt="" />
                     <div>
                       <div className="font-semibold text-foreground text-sm">{testimonial.author.name}</div>

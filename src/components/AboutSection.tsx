@@ -56,8 +56,8 @@ export function AboutSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section id="about" className="relative isolate overflow-clip bg-[#08050e] py-24 text-white sm:py-32 lg:py-40">
-      <CrestChromaWaves className="pointer-events-none absolute inset-0 opacity-70 saturate-[1.5] contrast-[1.18] brightness-[1.08] [mask-image:linear-gradient(to_bottom,transparent_0%,black_12%,black_86%,transparent_100%)]" />
+    <section id="about" className="relative isolate overflow-clip bg-[#08050e] py-20 text-white sm:py-32 lg:py-40">
+      <CrestChromaWaves className="pointer-events-none absolute inset-0 hidden opacity-70 saturate-[1.5] contrast-[1.18] brightness-[1.08] md:block [mask-image:linear-gradient(to_bottom,transparent_0%,black_12%,black_86%,transparent_100%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,transparent_0%,rgba(8,5,14,0.22)_45%,rgba(8,5,14,0.8)_100%)]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
@@ -76,7 +76,7 @@ export function AboutSection() {
           </motion.div>
 
           <div className="lg:col-span-8 lg:col-start-5">
-            <h2 className="font-display text-[clamp(3.15rem,7.3vw,7.2rem)] leading-[0.9] tracking-[-0.045em] text-white">
+            <h2 className="font-display text-5xl leading-[0.92] tracking-[-0.045em] text-white sm:text-[clamp(3.15rem,7.3vw,7.2rem)] sm:leading-[0.9]">
               <RevealLine>Security for the</RevealLine>
               <RevealLine delay={0.08}>
                 <span className="italic text-white/65">AI era.</span>
@@ -109,7 +109,7 @@ export function AboutSection() {
           </motion.div>
         </div>
 
-        <div className="mt-20 lg:mt-32 lg:grid lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.16fr)_minmax(0,0.72fr)] lg:items-start lg:gap-6 xl:gap-8">
+        <div className="mt-14 lg:mt-32 lg:grid lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.16fr)_minmax(0,0.72fr)] lg:items-start lg:gap-6 xl:gap-8">
           <div className="hidden lg:flex lg:flex-col lg:gap-6 lg:pt-24">
             {galleryColumns.left.map((src, index) => (
               <GalleryImage key={src} src={src} alt={`Crest intelligence interface ${index + 1}`} priority={index === 0} />
@@ -117,7 +117,7 @@ export function AboutSection() {
           </div>
 
           <div className="lg:sticky lg:top-28 lg:h-[calc(100dvh-9rem)] lg:self-start">
-            <div className="group relative h-[68vh] min-h-[34rem] overflow-hidden rounded-[2rem] border border-white/15 bg-[#110a1d] sm:h-[44rem] lg:h-full">
+            <div className="group relative h-[52svh] min-h-[24rem] overflow-hidden rounded-[1.5rem] border border-white/15 bg-[#110a1d] sm:h-[44rem] sm:rounded-[2rem] lg:h-full">
               <img
                 src={galleryColumns.center}
                 alt="Abstract security data visualisation"
@@ -127,9 +127,9 @@ export function AboutSection() {
               />
               <div className="pointer-events-none absolute inset-0 bg-[#512071]/20 mix-blend-color" />
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,transparent_36%,rgba(8,5,14,0.72)_100%)]" />
-              <div className="absolute inset-x-0 bottom-0 p-7 sm:p-9">
+              <div className="absolute inset-x-0 bottom-0 p-6 sm:p-9">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/55">Our mission</p>
-                <p className="mt-3 max-w-sm font-display text-2xl leading-[1.05] text-white sm:text-3xl">
+                <p className="mt-3 max-w-sm font-display text-xl leading-[1.08] text-white sm:text-3xl">
                   Protect the integrity of human communication in an increasingly synthetic world.
                 </p>
               </div>
@@ -143,7 +143,7 @@ export function AboutSection() {
           </div>
         </div>
 
-        <div className="mt-16 grid gap-px overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/10 md:grid-cols-3 lg:mt-24">
+        <div className="mt-12 grid gap-px overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/10 md:grid-cols-3 lg:mt-24">
           {principles.map((principle, index) => (
             <motion.article
               key={principle.number}
@@ -151,13 +151,13 @@ export function AboutSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: reduceMotion ? 0.01 : 0.65, delay: reduceMotion ? 0 : index * 0.07, ease: [0.16, 1, 0.3, 1] }}
-              className="group min-h-64 bg-[#0d0915] p-7 transition-colors duration-500 hover:bg-[#120d1d] sm:p-8"
+              className="group min-h-0 bg-[#0d0915] p-6 transition-colors duration-500 hover:bg-[#120d1d] sm:min-h-64 sm:p-8"
             >
               <div className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-[0.22em] text-white/40">
                 <span>{principle.number}</span>
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
               </div>
-              <h3 className="mt-14 max-w-xs font-display text-2xl leading-[1.02] text-white sm:text-[1.8rem]">{principle.title}</h3>
+              <h3 className="mt-10 max-w-xs font-display text-xl leading-[1.06] text-white sm:mt-14 sm:text-[1.8rem]">{principle.title}</h3>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/55">{principle.description}</p>
             </motion.article>
           ))}

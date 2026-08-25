@@ -64,6 +64,26 @@ const platformFeatures: PlatformFeature[] = [
 ];
 
 export function Hero() {
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileHero /> : <DesktopHero />;
+}
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 639px)");
+    const update = () => setIsMobile(media.matches);
+
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  return isMobile;
+}
+
+function DesktopHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -294,6 +314,40 @@ export function Hero() {
               <ArrowDown className="h-3.5 w-3.5 text-white/60 animate-bounce" />
             </motion.div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MobileHero() {
+  return (
+    <section id="home" className="relative min-h-[42rem] overflow-hidden bg-[#2e1050] text-white">
+      <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.5] contrast-[1.18] brightness-[1.08]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.08)_0%,rgba(8,5,14,0.18)_48%,rgba(8,5,14,0.68)_100%)]" />
+      <div className="pointer-events-none absolute inset-4 rounded-[1.5rem] border border-white/15" />
+
+      <div id="platform" className="relative z-10 flex min-h-[42rem] flex-col justify-between px-6 pb-8 pt-28">
+        <div className="max-w-sm">
+          <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/75">
+            Enterprise Cybersecurity
+          </p>
+          <h1 className="font-display text-3xl leading-[1.04] text-white">
+            Detect AI threats <span className="font-normal italic text-white/85">before</span> they reach your perimeter.
+          </h1>
+        </div>
+
+        <div className="max-w-sm">
+          <p className="text-sm leading-relaxed text-white/80">
+            Crest neutralizes deepfakes, AI-generated phishing, and zero-day payloads across email, endpoints, and cloud.
+          </p>
+          <Link
+            to="/book-demo"
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-5 py-3 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/25 active:scale-[0.98]"
+          >
+            <span>Book demo</span>
+            <span>→</span>
+          </Link>
         </div>
       </div>
     </section>

@@ -19,7 +19,13 @@ export function Navbar() {
   const isHomePage = location.pathname === "/";
   const isBookDemoPage = location.pathname === "/book-demo" || location.pathname === "/demo";
 
-  const [visible, setVisible] = useState(!isHomePage);
+  const [visible, setVisible] = useState(() => {
+    if (!isHomePage || typeof window === "undefined") {
+      return !isHomePage;
+    }
+
+    return window.matchMedia("(max-width: 639px)").matches;
+  });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
@@ -28,6 +34,14 @@ export function Navbar() {
       setVisible(true);
       return;
     }
+
+    const media = window.matchMedia("(max-width: 639px)");
+    if (media.matches) {
+      setVisible(true);
+      return;
+    }
+
+    setVisible(false);
 
     const onHeroProgress = (e: Event) => {
       const progress = (e as CustomEvent<{ progress: number }>).detail.progress;
@@ -84,7 +98,7 @@ export function Navbar() {
   const mobileButtonClass = isBookDemoPage ? "bg-white/10 text-white" : "bg-secondary text-foreground";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-[100] flex justify-center px-6 pt-6 pointer-events-none">
+    <header className="fixed inset-x-0 top-0 z-[100] flex justify-center px-4 pt-4 pointer-events-none sm:px-6 sm:pt-6">
       <AnimatePresence>
         {visible && (
           <motion.div
@@ -92,7 +106,7 @@ export function Navbar() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -24, opacity: 0 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className={`pointer-events-auto flex items-center justify-between w-full max-w-4xl rounded-full backdrop-blur-2xl ring-1 py-2.5 px-5 ${shellClass}`}
+            className={`pointer-events-auto flex w-full max-w-4xl items-center justify-between rounded-full px-4 py-2.5 backdrop-blur-2xl ring-1 sm:px-5 ${shellClass}`}
           >
             <Link
               to="/"
@@ -126,7 +140,7 @@ export function Navbar() {
 
       <AnimatePresence>
         {visible && mobileOpen && (
-          <motion.div initial={{ opacity: 0, y: -10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10, scale: 0.95 }} transition={{ duration: 0.2 }} className={`absolute top-20 left-6 right-6 rounded-[2rem] backdrop-blur-2xl ring-1 p-6 shadow-2xl pointer-events-auto origin-top ${isBookDemoPage ? "bg-[#140b20]/95 ring-white/10" : "bg-background/95 ring-border"}`}>
+          <motion.div initial={{ opacity: 0, y: -10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10, scale: 0.95 }} transition={{ duration: 0.2 }} className={`absolute left-4 right-4 top-[4.5rem] origin-top rounded-[1.5rem] p-5 shadow-2xl backdrop-blur-2xl ring-1 pointer-events-auto sm:left-6 sm:right-6 sm:top-20 sm:rounded-[2rem] sm:p-6 ${isBookDemoPage ? "bg-[#140b20]/95 ring-white/10" : "bg-background/95 ring-border"}`}>
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <a key={link.href} href={link.href} onClick={(e) => handleNavClick(e, link.href)} className={`block px-4 py-3 rounded-2xl text-lg font-display transition-colors ${isHomePage && activeSection === link.href.substring(1) ? (isBookDemoPage ? "bg-white/10 text-white" : "bg-secondary text-foreground") : (isBookDemoPage ? "text-white/60 hover:text-white" : "text-muted-foreground hover:text-foreground")}`}>

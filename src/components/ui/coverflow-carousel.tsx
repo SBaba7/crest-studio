@@ -37,6 +37,16 @@ export function CoverflowCarousel({
   const [selected, setSelected] = React.useState(
     Math.min(Math.max(initialIndex, 0), count - 1)
   );
+  const [isCompact, setIsCompact] = React.useState(false);
+
+  React.useEffect(() => {
+    const media = window.matchMedia("(max-width: 639px)");
+    const update = () => setIsCompact(media.matches);
+
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   const prev = React.useCallback(
     () => setSelected((curr) => (curr - 1 + count) % count),
@@ -92,12 +102,12 @@ export function CoverflowCarousel({
   const pausedRef = React.useRef(false);
 
   React.useEffect(() => {
-    if (!autoPlay || count <= 1) return;
+    if (!autoPlay || count <= 1 || isCompact) return;
     const id = setInterval(() => {
       if (!pausedRef.current) next();
     }, autoPlayInterval);
     return () => clearInterval(id);
-  }, [autoPlay, autoPlayInterval, count, next]);
+  }, [autoPlay, autoPlayInterval, count, isCompact, next]);
 
   const onPointerEnter = () => {
     pausedRef.current = true;
@@ -121,7 +131,7 @@ export function CoverflowCarousel({
       onPointerLeave={onPointerLeaveFrame}
     >
       <div
-        className="relative h-[340px] sm:h-[400px] md:h-[460px] flex items-center justify-center overflow-hidden [perspective:1200px]"
+        className="relative flex h-[290px] items-center justify-center overflow-hidden sm:h-[400px] md:h-[460px] sm:[perspective:1200px]"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -130,7 +140,7 @@ export function CoverflowCarousel({
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
       >
-        <div className="relative w-full max-w-[560px] h-[300px] sm:h-[340px] md:h-[380px] flex items-center justify-center [transform-style:preserve-3d]">
+        <div className="relative flex h-[250px] w-full max-w-[21rem] items-center justify-center sm:h-[340px] sm:max-w-[560px] md:h-[380px] sm:[transform-style:preserve-3d]">
           {slides.map((slide, i) => {
             let offset = i - selected;
             if (offset > count / 2) offset -= count;
@@ -139,7 +149,7 @@ export function CoverflowCarousel({
             const isCenter = offset === 0;
             const isPrev = offset === -1;
             const isNext = offset === 1;
-            const isVisible = Math.abs(offset) <= 2;
+            const isVisible = isCompact ? isCenter : Math.abs(offset) <= 2;
 
             if (!isVisible) return null;
 
@@ -164,7 +174,7 @@ export function CoverflowCarousel({
                   opacity,
                 }}
                 transition={{
-                  duration: 0.5,
+                  duration: isCompact ? 0.22 : 0.5,
                   ease: [0.32, 0.72, 0, 1],
                 }}
               >
@@ -180,15 +190,15 @@ export function CoverflowCarousel({
                     isCenter ? "opacity-90" : "opacity-60"
                   )}
                 />
-                <div className="absolute top-4 left-4">
+                <div                   className="absolute left-3 top-3 sm:left-4 sm:top-4">
                   {slide.category && (
                     <span className="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full bg-black/50 text-white/90 backdrop-blur-md border border-white/10">
                       {slide.category}
                     </span>
                   )}
                 </div>
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <h4 className="text-lg sm:text-xl font-display font-medium leading-tight">
+                <div className="absolute bottom-3 left-3 right-3 text-white sm:bottom-4 sm:left-4 sm:right-4">
+                  <h4 className="font-display text-base font-medium leading-tight sm:text-xl">
                     {slide.title}
                   </h4>
                 </div>

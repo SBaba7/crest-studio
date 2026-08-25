@@ -34,13 +34,13 @@ export function Footer() {
   };
 
   return (
-    <footer className="relative isolate z-10 overflow-hidden border-t border-white/10 bg-transparent text-white">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-85" aria-hidden="true">
+    <footer className="relative isolate z-10 overflow-hidden border-t border-white/10 bg-[#11061b] text-white md:bg-transparent">
+      <div className="pointer-events-none absolute inset-0 hidden overflow-hidden opacity-85 md:block" aria-hidden="true">
         <PlasmaShader className="absolute inset-0 block h-full w-full saturate-[1.5] contrast-[1.18] brightness-[1.08]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,5,14,0.12)_0%,rgba(8,5,14,0.04)_45%,rgba(8,5,14,0.2)_100%)]" />
       </div>
-      <div className="relative mx-auto max-w-7xl px-6 py-14 sm:py-20 lg:px-8 lg:py-24">
-        <div className="grid gap-12 border-b border-white/10 pb-12 sm:gap-14 sm:pb-16 lg:grid-cols-[minmax(0,1.5fr)_repeat(3,minmax(0,0.7fr))] lg:gap-10">
+      <div className="relative mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+        <div className="grid gap-10 border-b border-white/10 pb-10 sm:gap-14 sm:pb-16 lg:grid-cols-[minmax(0,1.5fr)_repeat(3,minmax(0,0.7fr))] lg:gap-10">
           <div className="max-w-sm">
             <Link to="/" className="group -ml-[18px] flex h-9 w-36 items-center sm:h-10 sm:w-40" aria-label="Crest home">
               <img
@@ -83,7 +83,7 @@ export function Footer() {
 
         <div className="flex flex-col gap-5 pt-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Crest Security. All rights reserved.</p>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             <a href="https://www.linkedin.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-white/85">LinkedIn</a>
             <a href="https://x.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-white/85">X</a>
             <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="ml-auto transition-colors hover:text-white/85 sm:ml-2">
